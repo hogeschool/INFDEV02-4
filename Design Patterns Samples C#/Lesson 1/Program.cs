@@ -50,7 +50,7 @@ namespace OptionNoLambda
     }
 
   }
-}
+  }
 namespace OptionLambda
 {
   public interface Option<T>
@@ -164,17 +164,17 @@ namespace ConsoleApplication1
       //Console.WriteLine("Amount of jazz music: " + music_library_visitor.jazz.Count);
 
       //OPTION VISITOR version 1
-      IOptionVisitor<int, int> opt_visitor = new LambdaOptionVisitor<int, int>(i => i + 1, () => { throw new Exception("Expexting a value.."); });
-      Option<int, int> opt = new Some<int, int>(5);
-      int res = opt.Accept(opt_visitor);
-      Console.WriteLine(res);
+      //IOptionVisitor<int, int> opt_visitor = new LambdaOptionVisitor<int, int>(i => i + 1, () => { throw new Exception("Expexting a value.."); });
+      //Option<int, int> opt = new Some<int, int>(5);
+      //int res = opt.Accept(opt_visitor);
+      //Console.WriteLine(res);
 
       //OPTION VISITOR version 2
       Option<int> number = new Some<int>(5);
-      int inc_number = number.Visit(() => { throw new Exception("Expexting a value.."); }, i => i + 1);
+      int inc_number = number.Visit(() => { throw new Exception("Expecting a value.."); }, i => i + 1);
       Console.WriteLine(inc_number);
       number = new None<int>();
-      inc_number = number.Visit(() => { throw new Exception("Expexting a value.."); }, i => i + 1);
+      inc_number = number.Visit(() => { throw new Exception("Expecting a value.."); }, i => i + 1);
       Console.WriteLine(inc_number);
 
 
