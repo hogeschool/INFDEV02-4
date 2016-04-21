@@ -29,8 +29,9 @@ let slides =
     SubSection("What we have not told you?")
     ItemsBlock
       [
-        ! @"Maybe you have already noticed it;"
-        ! @"Interactions affect coupling."
+        ! @"Interactions between program modules affect maintainability"
+        ! @"The higher the interactions, the higher is the chance of having bugs"
+        ! @"This phenomenon is knowkn as coupling"
       ]
     SubSection("What is coupling?")
     ItemsBlock
@@ -43,12 +44,20 @@ let slides =
       [
       ItemsBlockWithTitle "High-coupling"
         [
-          ! @"As the interaction surface between two classes \textbf{A} and \textbf{B} increases, the coupling between them increases as well;"
-          ! @"This translates into: whenever \textbf{A} changes the chance to erroneously change \textbf{B} is ``high'';" 
-          ! @"Thus, the amount of bugs."
-
-        ]
-      CSharpCodeBlock( TextSize.Tiny,
+          ! @"As the amount of interaction between two classes \textbf{A} and \textbf{B} increases, the coupling between them increases as well;"
+          ! @"This translates into: whenever \textbf{A} changes, the chance to erroneously change \textbf{B} is ``high'';" 
+          ! @"More bugs"
+        ]     
+      ]
+    VerticalStack
+      [
+        ItemsBlockWithTitle "High-coupling"
+          [
+            ! @"The class \texttt{Driver} contains a field of type \texttt{Car}"
+            ! @"The class \texttt{Driver} has visibility of all \texttt{Car} public methods and fields"
+            ! @"The interaction between \texttt{Driver} and \texttt{Car} should be limited to the \texttt{Move} method"
+          ]  
+        CSharpCodeBlock( TextSize.Tiny,
                       (classDef "Driver" 
                         [
                         typedDecl "car" "Car" |> makePrivate
@@ -63,8 +72,16 @@ let slides =
       [
       ItemsBlockWithTitle "Low-coupling"
         [
-          ! @"The interaction surface between two classes \textbf{A} and \textbf{B} is limited to a series of methods provided by an interface;"
-          ! @"This translates into: whenever \textbf{A} changes the chance to erroneously change \textbf{B} is ``low'', since \textbf{A} know little about \textbf{B}."
+          ! @"The amount of interaction between two classes \textbf{A} and \textbf{B} is limited to a series of methods provided by an interface;"
+          ! @"This translates into: whenever \textbf{A} changes, the chance to erroneously change \textbf{B} is ``low'', since \textbf{A} know little about \textbf{B}."
+        ]
+      ]
+    VerticalStack
+      [
+      ItemsBlockWithTitle "Low-coupling"
+        [
+          ! @"The class \texttt{Driver} contains a polymorphic type \texttt{Vehicle}"
+          ! @"The interaction between \texttt{Driver} and \texttt{Car} is restricted to the interface method \texttt{Move}"
         ]
       CSharpCodeBlock( TextSize.Tiny,
                       (classDef "Driver" 
@@ -85,42 +102,60 @@ let slides =
     SubSection("Low vs High coupling")
     ItemsBlock
       [
-        ! @"As the amount of entities increase, the of amount interactions increases (especially if the interfaces are not clear or not used at all);"
-        ! @"How much?"
-        ! @"It is a very big number (we are talking about an exponential function) depending on the amount of interacting objects;"
+        ! @"As the amount of entities increases, the of amount of interactions increases (especially if the interfaces are not clear or not used at all);"
+        ! @"It is a very big number (we are talking about a factorial function) depending on the amount of interacting objects"
         ! @"More precisely, given C classes, it is:
-\begin{equation*}
-O\left(\sum_{\substack{
-1<k \leq C
-}} \frac{C!}{2(C-k)!}\right)
-\end{equation*}
-"
+            \begin{equation*}
+            I \sim \left( \sum_{
+            k = 2}^{C} \frac{C!}{2(C-k)!} \right)
+            \end{equation*}
+            "
       ]
-    SubSection("Finding the right amount of coupling")
     ItemsBlock
       [
-        ! @"One could argue that: to avoid coupling we can put everything in one big class;"
-        ! @"Unfortunately this is completely true, since we can have coupling also within a single class."
+        ! @"Consider a very simple program with only 4 classes"
+        ! @"This amount is given by
+            \begin{equation*}
+            I \sim \dfrac{4!}{2(4 - 2)!} + \dfrac{4!}{2(4 - 3)!} + \dfrac{4!}{2(4 - 4)!} = 30
+            \end{equation*}"
+      ]
+    SubSection("Finding the right amount of coupling")
+    VerticalStack
+      [
+        ItemsBlock
+          [
+            ! @"One could argue that: to avoid coupling we can put everything in one big class;"
+            ! @"Unfortunately this does not solve the problem, since we can have coupling also within a single class."
+            ! @"Parts of the class \texttt{Driver} still have complete visibility on the rest of the class"
+          ]
+        CSharpCodeBlock( TextSize.Tiny,
+                        (classDef "Driver" 
+                          [
+                            typedDecl "vehicle" "Vehicle" |> makePrivate
+                            typedDef "Drive" [] "void" (Code.MethodCall("this.vehicle", "Move", []) |> makePublic)
+                            typedDef "Move" [] "void" (Code.Dots) |> makePublic
+                          ])) |> Unrepeated
       ]
 
     SubSection("Achieving low-coupling")
     ItemsBlock
       [
-        ! @"What seems desirable when dealing with software development is to keep coupling (our interactions) among entities as low as possible;"
-        ! @"Why?"
-        ! @"To mainly keep code maintainable."        
+        ! @"Maintaining code is hard and expensive"
+        ! @"Low coupling = easily maintainable code"
+        ! @"What seems desirable when dealing with software development is to keep coupling (our interactions) among entities as low as possible"
       ]
     SubSection("Maintainability in code")
     ItemsBlock
       [
         ! @"Is an important aspect in development;"
         ! @"It affects costs, code customization, bug fixing, etc."
+        ! @"Maintainable code = low chance of bugs and smaller effort in making changes"  
       ]
-    SubSection("Achieving low-coupling")
+    SubSection("Polymorphism for taming coupling in programs")
     ItemsBlock
       [
-        ! @"How how can we reduce the interaction surface among objects??"
-        ! @"We can use polymorphism, as seen in the last example, as a tool for specifying interaction surfaces."
+        ! @"We can control interactions by means of an interface that hides the specifics of some classes"
+        ! @"Every entity interacts with another only through small ``windows'' (defined as interfaces), each exposing specific and controlled behavior."
       ]
     SubSection("Low-coupling a general view")
     ItemsBlock
@@ -136,12 +171,6 @@ O\left(\sum_{\substack{
         Class("B", 3.0, -3.0, Some "IB", [], [])
         Aggregation("A","ib",1,"IB")
         Aggregation("B","ia",1,"IA")
-      ]
-    SubSection("Polymorphism for taming coupling in programs")
-    ItemsBlock
-      [
-        ! @"We can now control interactions by means of an interface that hides the specifics of some classes;"
-        ! @"Now every entity interacts with another only through small ``windows'' (defined as interfaces) each exposing specific and controlled behavior."
       ]
 
     VerticalStack
