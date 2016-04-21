@@ -231,108 +231,138 @@ O\left(\sum_{\substack{
         ! @"An option has an underlying type and can hold a value of that type, or it might not have a value."
       ]
     SubSection("Example of usage")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"The following code illustrates the use of the option type;"
-        ! @"In this case we are capturing the number \texttt{5} within a \texttt{Some<int>} object;"
-        ! @"[] \begin{lstlisting}
-Option<int> a_number = new Some<int>(5);
-\end{lstlisting}"   
-        ! @"In this case we captring the ``nothing'' common to all values of type \texttt{int} withing a \texttt{None<int>} object;"
-        ! @"[] \begin{lstlisting}
-Option<int> another_number = new None<int>();
-\end{lstlisting}" 
+        ItemsBlockWithTitle("Example of usage")
+          [
+            ! @"The following code illustrates the use of the option type;"
+            ! @"In this case we are capturing the number \texttt{5} within a \texttt{Some<int>} object;"
+          ]
+        CSharpCodeBlock(TextSize.Tiny,(typedDeclAndInit "a_number" "Option<int>" (Code.New("Some<int>", [constInt(5)])) >> endProgram )) |> Unrepeated
+        ItemsBlockWithTitle("Example of usage")
+          [
+            ! @"In this case we captring the ``nothing'' common to all values of type \texttt{int} withing a \texttt{None<int>} object;"
+          ]
+        CSharpCodeBlock(TextSize.Tiny,(typedDeclAndInit "another_number" "Option<int>" (Code.New("None<int>", [])) >> endProgram )) |> Unrepeated
       ]
 
     SubSection("Some<T> and None<T>")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"Both types implement the \texttt{Option<T>} data structure;"
-        ! @"[] \begin{lstlisting}
-class Some<T> : Option<T> { ... }
-\end{lstlisting}" 
-        ! @"[] \begin{lstlisting}
-class None<T> : Option<T> { ... }
-\end{lstlisting}" 
-        ! @"\texttt{Some<T>} is a container of data, of type \texttt{T}, which is ready to get consumed; and"
-        ! @"\texttt{None<T>} is a container of data, of type \texttt{T}, which is not ready to get consumed yet."
+        ItemsBlockWithTitle "Some<T> and None<T>"
+          [
+            ! @"Both types implement the \texttt{Option<T>} data structure;"
+          ]
+        CSharpCodeBlock(TextSize.Tiny,
+                        ((genericClassDef ["T"]
+                                           "Some"
+                                            [implements "Option<T>"
+                                             dots]
+                                             ) >> endProgram )) |> Unrepeated
+        CSharpCodeBlock(TextSize.Tiny,
+                        ((genericClassDef ["T"]
+                                           "None"
+                                            [implements "Option<T>"
+                                             dots]
+                                             ) >> endProgram )) |> Unrepeated
+        ItemsBlock
+          [
+            ! @"\texttt{Some<T>} is a container of data, of type \texttt{T}, which is ready to get consumed; and"
+            ! @"\texttt{None<T>} is a container of data, of type \texttt{T}, which is not ready to get consumed yet."
+          ]
       ]
 
     SubSection("Option<T>")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"Is an interface that represents both the absence and presence of data of type \texttt{T}"
-        ! @"[] \begin{lstlisting}
-interface Option<T> { ... }
-\end{lstlisting}" 
+      ItemsBlock
+        [
+          ! @"Is an interface that represents both the absence and presence of data of type \texttt{T}"
+        ]
+      CSharpCodeBlock(TextSize.Tiny,
+                        (GenericInterfaceDef (["T"], "Option", [dots])) 
+                         >> endProgram) |> Unrepeated
       ]
 
     SubSection("Visiting an Option<T>")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"As option represents a generic container for any type of objects, we need a mechanism that allows us to manipulate its content regardless its concrete data type;"
-        ! @"We add a method to our interface called \texttt{Visit} that accepts as inputs a series of options (in the shape of lambdas) and a generic result;"
-        ! @"Each option will be selected by exactly one of the possible concrete types;"
-        ! @"We decided a propri that the first argument is meant for the class \texttt{None<T>} while the second one for the \texttt{Some<T>}"
-        ! @"[] \begin{lstlisting}
-interface Option<T>
-{
-  U Visit<U>(Func<U> onNone, Func<T, U> onSome);
-}
-\end{lstlisting}" 
+        ItemsBlockWithTitle("Visiting an Option<T>")
+          [
+            ! @"As option represents a generic container for any type of objects, we need a mechanism that allows us to manipulate its content regardless its concrete data type;"
+            ! @"We add a method to our interface called \texttt{Visit} that accepts as inputs a series of options (in the shape of lambdas) and a generic result;"
+            ! @"Each option will be selected by exactly one of the possible concrete types;"
+            ! @"We decided a propri that the first argument is meant for the class \texttt{None<T>} while the second one for the \texttt{Some<T>}"
+          ]
+        CSharpCodeBlock(TextSize.Tiny,
+                        (GenericInterfaceDef (["T"], "Option", [typedSig "Visit<U>" [("Func<U>","onNone"); ("Func<T, U>","onSome")] "U"])) 
+                         >> endProgram) |> Unrepeated
       ]
 
+
     SubSection("Visiting a None<T>")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"When visiting an object of type \texttt{None<T>} we first select the input reserved for it then we return the result of its call;"
-        ! @"[] \begin{lstlisting}
-public U Visit<U>(Func<U> onNone, Func<T, U> onSome)
-{
-  return onNone();
-}
-\end{lstlisting}" 
+      ItemsBlockWithTitle("Visiting a None<T>")
+        [
+          ! @"When visiting an object of type \texttt{None<T>} we first select the input reserved for it then we return the result of its call;"
+        ]
+      CSharpCodeBlock(TextSize.Tiny,
+                        ((genericClassDef ["T"]
+                                          "None"
+                                          [implements "Option<T>"
+                                           typedDef "Visit<U>" [("Func<U>","onNone"); ("Func<T, U>","onSome")] "U" ((Code.Call("onNone", []) |> ret) >> endProgram) |> makePublic
+                                           ]) >> endProgram )) |> Unrepeated
       ]
 
     SubSection("Visiting a Some<T>")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"When instantiating a \texttt{Some<T>} a data of type \texttt{T} is passed and stored inside a field \texttt{value};"
-        ! @"When visiting an object of type \texttt{Some<T>} we first select the input reserved for it then we return the result of its call with \texttt{value} given as input;"
-        ! @"We pass \texttt{value} to the lambda, since it might be transformed/consumed by it;"        
-        ! @"[] \begin{lstlisting}
-class Some<T> : Option<T>
-{
-  T value;
-  public Some(T value) { this.value = value; }
-  public U Visit<U>(Func<U> onNone, Func<T, U> onSome)
-  {
-    return onSome(value);
-  }
-}
-\end{lstlisting}" 
+        ItemsBlockWithTitle "Visiting a Some<T>"
+          [
+            ! @"When instantiating a \texttt{Some<T>} a data of type \texttt{T} is passed and stored inside a field \texttt{value};"
+            ! @"When visiting an object of type \texttt{Some<T>} we first select the input reserved for it then we return the result of its call with \texttt{value} given as input;"
+            ! @"We pass \texttt{value} to the lambda, since it might be transformed/consumed by it;"        
+          ]
+        CSharpCodeBlock(TextSize.Tiny,
+                         ((genericClassDef ["T"]
+                                           "Some"
+                                            [implements "Option<T>"
+                                             typedDecl "value" "T" |> makePrivate
+                                             typedDef "Some" ["T","value"] "" (("this.value" := var"value") >> endProgram) |> makePublic
+                                             typedDef "Visit<U>" [("Func<U>","onNone"); ("Func<T, U>","onSome")] "U" ((Code.Call("onSome", [var "value"]) |> ret) >> endProgram) |> makePublic
+                                             ]
+                                             ) >> endProgram )) |> Unrepeated
       ]
     SubSection("Testing out our Option<T>")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"The next line shows how to use our option to capture numbers and define operations over it;"
-        ! @"More precisely we define a \texttt{Some} containing the number 5 with the following operations: \begin{itemize} \item The first lambda runs an exception, since we are trying to read a data that is not ready (None represents a \texttt{null} object); \item The second lambda gets as input the \texttt{value} stored into \texttt{Some} and increments it by 1. \end{itemize} "
-        ! @"[] \begin{lstlisting}
-Option<int> number = new Some<int>(5);
-int inc_number = number.Visit(() => { throw new Exception(\""Expexting a value..\""); }, i => i + 1);
-\end{lstlisting}" 
+      ItemsBlock
+        [
+          ! @"The next line shows how to use our option to capture numbers and define operations over it;"
+          ! @"More precisely we define a \texttt{Some} containing the number 5 with the following operations: \begin{itemize} \item The first lambda runs an exception, since we are trying to read a data that is not ready (None represents a \texttt{null} object); \item The second lambda gets as input the \texttt{value} stored into \texttt{Some} and increments it by 1. \end{itemize} "
+        ]
+      CSharpCodeBlock(TextSize.Tiny,
+                      (typedDeclAndInit "number" "Option<int>" (Code.New("Some<int>", [constInt(5)])) >>
+                       typedDeclAndInit "inc_number" "int" (Code.MethodCall("number", "Visit", [Code.GenericLambdaFuncDecl([], Code.ConstString("Throw exception..") |> ret )
+                                                                                                Code.GenericLambdaFuncDecl(["x"], ret (var"x" .+ constInt 1))])) >>
+                                                                                                endProgram )) |> Unrepeated
       ]
     SubSection("Testing out our Option<T>")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"The next line shows an example with a \texttt{None} object;"
-        ! @"Visiting such object will indeed cause an exception;"
-        ! @"[] \begin{lstlisting}
-number = new None<int>();
-int inc_number = number.Visit(() => { throw new Exception(\""Expexting a value..\""); }, i => i + 1);
-\end{lstlisting}" 
-        ! @"As we see we managed to define operations on the fly over polimorphic data types in a controlled way;"
-        ! @"This design will work properly (regadless the data type captured by \texttt{T}) as long as there are always options to choose."
+        ItemsBlockWithTitle("Testing out our Option<T>")
+          [
+            ! @"The next line shows an example with a \texttt{None} object;"
+            ! @"Visiting such object will indeed cause an exception;"
+            ! @"As we see we managed to define operations on the fly over polimorphic data types in a controlled way;"
+            ! @"This design will work properly (regadless the data type captured by \texttt{T}) as long as there are always options to choose."
+          ]
+        CSharpCodeBlock(TextSize.Tiny,
+                        (typedDeclAndInit "number" "Option<int>" (Code.New("None<int>", [])) >>
+                         typedDeclAndInit "inc_number" "int" (Code.MethodCall("number", "Visit", [Code.GenericLambdaFuncDecl([], Code.ConstString("Throw exception..") |> ret )
+                                                                                                  Code.GenericLambdaFuncDecl(["x"], ret (var"x" .+ constInt 1))])) >>
+                                                                                                  endProgram )) |> Unrepeated
       ]
     SubSection("More sample")
     ItemsBlock
