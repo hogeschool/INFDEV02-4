@@ -8,27 +8,26 @@ namespace OptionNoLambda
 {
   interface IOptionVisitor<T, U>
   {
-    U Visit(Some<T, U> option);
-    U Visit(None<T, U> option);
+    U Visit(Some<T> option);
+    U Visit(None<T> option);
   }
-  interface Option<T, U> { U Accept(IOptionVisitor<T, U> visitor); }
-  class Some<T, U> : Option<T, U>
+  interface Option<T> { U Visit<U>(IOptionVisitor<T, U> visitor); }
+  class Some<T> : Option<T>
   {
     public T value;
     public Some(T value) { this.value = value; }
-    public U Accept(IOptionVisitor<T, U> visitor)
+    public U Visit<U>(IOptionVisitor<T, U> visitor)
     {
       return visitor.Visit(this);
     }
   }
-  class None<T, U> : Option<T, U>
+  class None<T> : Option<T>
   {
-    public U Accept(IOptionVisitor<T, U> visitor)
+    public U Visit<U>(IOptionVisitor<T, U> visitor)
     {
       return visitor.Visit(this);
     }
   }
-
   class LambdaOptionVisitor<T, U> : IOptionVisitor<T, U>
   {
     Func<T, U> onSome;
@@ -38,19 +37,17 @@ namespace OptionNoLambda
       this.onSome = onSome;
       this.onNone = onNone;
     }
-
-    public U Visit(None<T, U> option)
-    {
-      return onNone();
-    }
-
-    public U Visit(Some<T, U> option)
+    public U Visit(Some<T> option)
     {
       return onSome(option.value);
     }
 
+    public U Visit(None<T> option)
+    {
+      return onNone();
+    }
   }
-  }
+}
 namespace OptionLambda
 {
   public interface Option<T>
@@ -144,7 +141,7 @@ namespace ConsoleApplication1
   using Number;
   using OptionNoLambda;
   using MusicLibrary;
-  using OptionLambda;
+  //using OptionLambda;
   class Program
   {
     static void Main(string[] args)
@@ -164,18 +161,18 @@ namespace ConsoleApplication1
       //Console.WriteLine("Amount of jazz music: " + music_library_visitor.jazz.Count);
 
       //OPTION VISITOR version 1
-      //IOptionVisitor<int, int> opt_visitor = new LambdaOptionVisitor<int, int>(i => i + 1, () => { throw new Exception("Expexting a value.."); });
-      //Option<int, int> opt = new Some<int, int>(5);
-      //int res = opt.Accept(opt_visitor);
-      //Console.WriteLine(res);
+      IOptionVisitor<int, int> opt_visitor = new LambdaOptionVisitor<int, int>(i => i + 1, () => { throw new Exception("Expexting a value.."); });
+      Option<int> opt = new Some<int>(5);
+      int res = opt.Visit(opt_visitor);
+      Console.WriteLine(res);
 
       //OPTION VISITOR version 2
-      Option<int> number = new Some<int>(5);
-      int inc_number = number.Visit(() => { throw new Exception("Expecting a value.."); }, i => i + 1);
-      Console.WriteLine(inc_number);
-      number = new None<int>();
-      inc_number = number.Visit(() => { throw new Exception("Expecting a value.."); }, i => i + 1);
-      Console.WriteLine(inc_number);
+      //Option<int> number = new Some<int>(5);
+      //int inc_number = number.Visit(() => { throw new Exception("Expecting a value.."); }, i => i + 1);
+      //Console.WriteLine(inc_number);
+      //number = new None<int>();
+      //inc_number = number.Visit(() => { throw new Exception("Expecting a value.."); }, i => i + 1);
+      //Console.WriteLine(inc_number);
 
 
 

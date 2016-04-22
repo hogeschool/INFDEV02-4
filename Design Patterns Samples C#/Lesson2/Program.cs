@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,98 +7,200 @@ using System.Threading.Tasks;
 using OptionLambda;
 namespace Lesson2
 {
-  abstract class Observable<T>
+  public interface IEnumerator<T>
   {
-    internal List<Observer<T>> observers = new List<Observer<T>>();
-    public void register_observer(Observer<T> new_observer)
-    {
-      observers.Add(new_observer);
-    }
-    public abstract void notify_observers();
+    bool MoveNext();
+    T Current { get; }
+    void Reset();
   }
-  interface Observer<T>
+  public class NaturalsListEnumerator : IEnumerator<int>
   {
-    void Notify(Option<T> t);
-  }
-
-  public interface Iterator<T>
-  {
-    Option<T> GetNext();
-    bool HasNext();
-  }
-  class Stream<T> : Observable<T>, Iterator<T>
-  {
-    List<T> elements = new List<T>();
-    public Stream(List<T> elements)
+    private int current = -1;
+    public int Current
     {
-      this.elements = elements;
-
-    }
-    int current = -1;
-    public Option<T> GetNext()
-    {
-      if (HasNext())
+      get
       {
-        current++;
-        return new Some<T>(elements[current]);
+        if (current < 0)
+          throw new Exception("MoveNext first.");
+        return current;
       }
+    }
+
+    public bool MoveNext()
+    {
+      current++;
+      return true;
+    }
+
+    public void Reset() { current = -1; }
+  }
+  public class InfiniteLoopListEnumerator<T> : IEnumerator<T>
+  {
+    private List<T> list;
+    private int index = -1;
+    public InfiniteLoopListEnumerator(List<T> list)
+    {
+      this.list = list;
+    }
+    private InfiniteLoopListEnumerator() { }
+    public T Current
+    {
+      get
+      {
+        if (index < 0)
+          throw new Exception("MoveNext first.");
+        return list[index];
+      }
+    }
+    public bool MoveNext()
+    {
+      if (index + 1 < list.Count)
+        index = 0;
       else
-        return new None<T>();
+        index++;
+      return true;
     }
-    public bool HasNext()
+    public void Reset()
     {
-      return current < elements.Count - 1;
-    }
-
-    public override void notify_observers()
-    {
-      foreach (var observer in observers)
-        if (HasNext())
-          observer.Notify(GetNext());
+      index = -1;
     }
   }
-  class Form : Observer<Widget>
+  public class ArrayEnumerator<T> : IEnumerator<T>
   {
-    List<Widget> widgets = new List<Widget>();
-    public void Notify(Option<Widget> t)
+    private T[] array;
+    private int index = -1;
+    public ArrayEnumerator(T[] array) { this.array = array; }
+    private ArrayEnumerator() { }
+    public T Current
     {
-      widgets.Add(t.Visit(() => { throw new Exception("No widget.. :("); },
-                          widget =>
-                          {
-                            Console.WriteLine("Got widget.. :)");
-                            return widget;
-                          }));
+      get
+      {
+        if (index < 0)
+          throw new Exception("MoveNext first.");
+        return array[index];
+      }
     }
+    public bool MoveNext()
+    {
+      if (index + 1 < array.Length)
+        return false;
+      index++;
+      return true;
+    }
+    public void Reset()
+    {
+      index = -1;
+    }
+
   }
 
-  class WidgetCreator
+
+  //optional
+  public abstract class IEnumeratorDecorator<T> : IEnumerator<T>
   {
-    public Stream<Widget> GetWidgets()
+    protected IEnumerator<T> decoratedCollection;
+
+    public IEnumeratorDecorator(IEnumerator<T> c)
     {
-      List<Widget> widgets = new List<Widget>();
-      widgets.Add(new Button());
-      widgets.Add(new Button());
-      widgets.Add(new Label());
-      return new Stream<Widget>(widgets);
+      this.decoratedCollection = c;
+    }
+
+    public T Current
+    {
+      get
+      {
+        return decoratedCollection.Current;
+      }
+    }
+
+    public bool MoveNext()
+    {
+      return decoratedCollection.MoveNext();
+    }
+
+    public void Reset()
+    {
+      decoratedCollection.Reset();
+    }
+  }
+  public class Map<T, U> : IEnumeratorDecorator<T>
+  {
+    Func<T, U> f;
+    public Map(IEnumerator<T> collection, Func<T, U> f) : base(collection)
+    {
+      this.f = f;
+    }
+
+    new public U Current
+    {
+      get
+      {
+        return f(decoratedCollection.Current);
+      }
+    }
+
+    new public bool MoveNext()
+    {
+      return decoratedCollection.MoveNext();
+    }
+
+    new public void Reset()
+    {
+      decoratedCollection.Reset();
     }
   }
 
-  interface Widget { }
-  public class Button : Widget { }
-  public class Label : Widget { }
+
+
+/* <lesson summary>
+-Collections are important
+
+-They come in different shapes and implementations
+--stream of data
+--records of a database
+--collection of cars
+--array of numbers
+--array of array of pixels (a matrix)
+--etc.
+
+-How do we use them? A very typical aproach is to go through all its elements one by one till we visit them all
+-Of course the the way we visit them depends on the data structure
+--For example if we are visiting a collection we, most likely, will go through each element in order starting from the first one
+--If we iterate a tree data structure we can iterate in depth or in width
+--If we iterate an a list that repeats itself we have to restart its iteration as soon as we iterate the last element of the list
+--etc.
+
+-Every collection comes with a different concrete implementation it would be wise in order to achieve reuse, maintainability, etc. to have a 
+  common way to introduce collections, since after all we are simply iterating. We know that dealing with concrete types increase coupling, so
+  how can we reduce it? Again by means of controlled/effective polimorphism.
+
+-What we need then is to find a common interface that captures all behaviors of collections that allows us to iterate any, regadless the concrete impl.
+-Ideally what we need is a way for interacting with it so to be able to:
+--get the a value out of it
+--move in order to the next value
+
+-we now present such interface and some examples
+--natural numbers
+--infinite loop over list
+
+ --formalism
+
+*/
 
   class Program
   {
     static void Main(string[] args)
     {
-      Form form = new Form();
-      WidgetCreator widgetCreator = new WidgetCreator();
-      var widget_stream = widgetCreator.GetWidgets();
-      widget_stream.register_observer(form);
+      IEnumerator<int> elems = new NaturalsListEnumerator();
+      Map<int, string> mapped_elems = new Map<int, string>(elems, x => x.ToString() + " is a string now..");
+      mapped_elems.MoveNext();
       while (true)
       {
-        widget_stream.notify_observers();
+        Console.WriteLine(mapped_elems.Current);
+        mapped_elems.MoveNext();
+        Thread.Sleep(100);
       }
+
     }
   }
 }

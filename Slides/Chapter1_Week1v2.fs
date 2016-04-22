@@ -304,7 +304,7 @@ let slides =
     SubSection("Option<T>")
     VerticalStack
       [
-      ItemsBlock
+      ItemsBlockWithTitle ("Option<T>")
         [
           ! @"Is an interface that represents both the absence and presence of data of type \texttt{T}"
         ]
@@ -313,6 +313,110 @@ let slides =
                          >> endProgram) |> Unrepeated
       ]
 
+    Section("Visiting Options without lambdas")
+    SubSection("Visiting an Option<T>")
+    VerticalStack
+      [
+        ItemsBlockWithTitle("Visiting an Option<T>")
+          [
+            ! @"As an option represents a generic container for any type of objects, we need a mechanism that allows us to manipulate its concrete content;"
+            ! @"To do so, we add a method \texttt{Visit} to the interface that accepts as input a ``Visitor'' (an \texttt{IOptionVisitor<T, U>}) and returns a generic result;"            
+            ! @"The visitor object is able to identify the type of the concrete option (\texttt{Some} or \texttt{None}) and manipulate it;"
+            ! @"\textbf{Note}, in many literature this \texttt{Visit} method is generally called \texttt{Accept}."
+          ]
+        CSharpCodeBlock(TextSize.Tiny,
+                        (GenericInterfaceDef (["T"], "Option", [typedSig "Visit<U>" [("IOptionVisitor<T, U>","visitor")] "U"])) 
+                         >> endProgram) |> Unrepeated
+      ]
+    SubSection("The IOptionVisitor<T, U>")
+    VerticalStack
+      [
+        ItemsBlockWithTitle("What is an IOptionVisitor<T, U>")
+          [
+            ! @"Is an interface that provides a series of method overloads (methods sharing the same name but different arguments) each per concrete class;"
+            ! @"In our case we have two signatures one for visiting a concrete \texttt{Some} instance and one for the \texttt{None}."
+          ]
+        CSharpCodeBlock(TextSize.Tiny,
+                        (GenericInterfaceDef (["T"; "U"], "IOptionVisitor", [typedSig "Visit<U>" [("Some<T>","option")] "U"
+                                                                             typedSig "Visit<U>" [("None<T>","option")] "U"])) 
+                         >> endProgram) |> Unrepeated
+      ]
+    SubSection("A concrete visitor - LambdaOptionVisitor<T, U>")
+    VerticalStack
+      [
+        ItemsBlockWithTitle("A concrete visitor - LambdaOptionVisitor<T, U>")
+          [
+            ! @"Is able to perform operations on polimorphic data structures (our case on objects of type \texttt{Some} and \texttt{None});"
+            ! @"Such operations (used within the \texttt{Visit}'s) are assigned during initialization and are stored as attributes of this class;"
+          ]
+        CSharpCodeBlock(TextSize.Tiny,
+                  ((genericClassDef ["T"; "U"]
+                                    "LambdaOptionVisitor"
+                                    [implements "Option<T>"
+                                     typedDecl "oneSome" "Func<T, U>" |> makePrivate
+                                     typedDecl "onNone" "Func<U>" |> makePrivate
+                                     typedDef "LambdaOptionVisitor" ["Func<T, U>","onSome";"Func<U>","onNone"] "" (("this.onNone" := var"onNone") >> ("this.onSome" := var"onSome") >> endProgram) |> makePublic
+                                     typedDef "Visit<U>" [("Some<T>","option")] "U" ((Code.Call("onSome", [var "option.value"]) |> ret) >> endProgram) |> makePublic
+                                     typedDef "Visit<U>" [("None<T>","option")] "U" ((Code.Call("onNone", []) |> ret) >> endProgram) |> makePublic
+                                     ]
+                                     ) >> endProgram )) |> Unrepeated
+
+      ]
+
+    SubSection("Visiting a None<T>")
+    VerticalStack
+      [
+      ItemsBlockWithTitle("Visiting a None<T>")
+        [
+          ! @"At this point, when visiting an object of type \texttt{None<T>} we only implement the \texttt{Visit} method: we call the visitor method \texttt{Visit} of the visitor given as input (with \texttt{this} as its input, in this way we will hellp the system to select the method among those declared in the \texttt{IOptionVisitor} interface) then we return the result of its call;"
+          ! @"By assigning \texttt{this} to the \texttt{Visit} method we force the visitor to choose the overload axpecting a \texttt{None} object;"
+          ! @"In this way we are sure that the operation performed is the one meant for this class."
+        ]
+      CSharpCodeBlock(TextSize.Tiny,
+                        ((genericClassDef ["T"]
+                                          "None"
+                                          [implements "Option<T>"
+                                           typedDef "Visit<U>" [("IOptionVisitor<T, U>","visitor")] "U" ((Code.Call("visitor.Visit", [var "this"]) |> ret) >> endProgram) |> makePublic
+                                           ]) >> endProgram )) |> Unrepeated
+      ]
+
+    SubSection("Visiting a Some<T>")
+    VerticalStack
+      [
+        ItemsBlockWithTitle "Visiting a Some<T>"
+          [
+            ! @"When instantiating a \texttt{Some<T>} a data of type \texttt{T} is passed and stored inside a field \texttt{value};"
+            ! @"When visiting an object of type \texttt{Some<T>} we only implement the \texttt{Visit} method: we call the visitor method \texttt{Visit} of the visitor given as input (with \texttt{this} as its input, in this way we will hellp the system to select the method among those declared in the \texttt{IOptionVisitor} interface) then we return the result of its call;"
+            ! @"By assigning \texttt{this} to the \texttt{Visit} method we force the visitor to choose the overload axpecting a \texttt{Some} object;"
+            ! @"In this way we are sure that the operation performed is the one meant for this class."
+          ]
+        CSharpCodeBlock(TextSize.Tiny,
+                         ((genericClassDef ["T"]
+                                           "Some"
+                                            [implements "Option<T>"
+                                             typedDecl "value" "T" |> makePublic
+                                             typedDef "Some" ["T","value"] "" (("this.value" := var"value") >> endProgram) |> makePublic
+                                             typedDef "Visit<U>" [("IOptionVisitor<T, U>","visitor")] "U" ((Code.Call("visitor.Visit", [var "this"]) |> ret) >> endProgram) |> makePublic
+                                             ]
+                                             ) >> endProgram )) |> Unrepeated
+      ]
+    SubSection("Testing out our Option<T>")
+    VerticalStack
+      [
+      ItemsBlockWithTitle ("Testing out our Option<T>")
+        [
+          ! @"The next line shows how to use our option to capture numbers and define operations over it;"
+          ! @"More precisely we instantiate a \texttt{LambdaOptionVisitor}, which is then used to visit a \texttt{Some} containing the number 5."
+        ]
+      CSharpCodeBlock(TextSize.Tiny,
+                      (typedDeclAndInit "opt_visitor" "IOptionVisitor<int, int>" (Code.New("LambdaOptionVisitor<int, int>", 
+                                                                                           [Code.GenericLambdaFuncDecl([], Code.ConstString("Throw exception..") |> ret )
+                                                                                            Code.GenericLambdaFuncDecl(["x"], ret (var"x" .+ constInt 1))])) >>
+                       typedDeclAndInit "number" "Option<int>" (Code.New("Some<int>", [constInt(5)])) >>
+                       Code.MethodCall( "number", "Visit", [(var "opt_visitor")]) >> endProgram)) |> Unrepeated
+      ]
+
+    Section("Visiting Options lambdas")
     SubSection("Visiting an Option<T>")
     VerticalStack
       [
@@ -366,7 +470,7 @@ let slides =
     SubSection("Testing out our Option<T>")
     VerticalStack
       [
-      ItemsBlock
+      ItemsBlockWithTitle ("Testing out our Option<T>")
         [
           ! @"The next line shows how to use our option to capture numbers and define operations over it;"
           ! @"More precisely we define a \texttt{Some} containing the number 5 with the following operations: \begin{itemize} \item The first lambda runs an exception, since we are trying to read a data that is not ready (None represents a \texttt{null} object); \item The second lambda gets as input the \texttt{value} stored into \texttt{Some} and increments it by 1. \end{itemize} "
