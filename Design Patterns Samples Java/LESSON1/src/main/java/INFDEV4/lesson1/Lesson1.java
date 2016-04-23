@@ -5,12 +5,10 @@
  */
 package INFDEV4.lesson1;
 
-import java.util.ArrayList;
-
 import number.*;
 import musicLibrary.*;
-//import optionNoLambda.*;
-import optionLambda.*;
+import optionNoLambda.*;
+//import optionLambda.*;
 
 public class Lesson1 {
 
@@ -33,26 +31,26 @@ public class Lesson1 {
 //        System.out.println("Amount of heavy metal music: " + music_library_visitor.heavyMetal.size());
 //        System.out.println("Amount of jazz music: " + music_library_visitor.jazz.size());
 
-//        //OPTION VISITOR version 1
-//        IncOptionVisitor<Integer, Integer> opt_visitor = new IncOptionVisitor<Integer, Integer>(i -> i + 1, () -> {
+        //OPTION VISITOR version 1
+        IOptionVisitor<Integer, Integer> opt_visitor = new LambdaOptionVisitor<Integer, Integer>(i -> i + 1, () -> {
+            throw new IllegalArgumentException("Expecting a value...");
+        });
+        IOption<Integer> opt = new Some<Integer>(5);
+        int res = opt.visit(opt_visitor);
+        System.out.println(res);
+
+//        //OPTION VISITOR version 2
+//        IOption<Integer> number = new Some<Integer>(5);
+//        int inc_number = number.visit(() -> {
 //            throw new IllegalArgumentException("Expecting a value...");
-//        });
-//        IOption<Integer, Integer> opt = new Some<Integer, Integer>(5);
-//        int res = opt.accept(opt_visitor);
-//        System.out.println(res);
-
-        //OPTION VISITOR version 2
-        IOption<Integer> number = new Some<Integer>(5);
-        int inc_number = number.visit(() -> {
-            throw new IllegalArgumentException("Expecting a value...");
-        }, i -> i + 1);
-        System.out.println(inc_number);
-
-        number = new None<Integer>();
-        inc_number = number.visit(() -> {
-            throw new IllegalArgumentException("Expecting a value...");
-        }, i -> i + 1);
-        System.out.println(inc_number);
+//        }, i -> i + 1);
+//        System.out.println(inc_number);
+//
+//        number = new None<Integer>();
+//        inc_number = number.visit(() -> {
+//            throw new IllegalArgumentException("Expecting a value...");
+//        }, i -> i + 1);
+//        System.out.println(inc_number);
 
     }
 }

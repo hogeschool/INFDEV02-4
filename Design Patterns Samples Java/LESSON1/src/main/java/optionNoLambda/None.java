@@ -5,9 +5,9 @@
  */
 package optionNoLambda;
 
-class None<T, U> implements IOption<T, U> {
+class None<T> implements IOption<T> {
 
-    public U accept(IncOptionVisitor<T, U> visitor) {
+    public <U> U visit(IOptionVisitor<T, U> visitor) {
         return visitor.visit(this);
     }
 }

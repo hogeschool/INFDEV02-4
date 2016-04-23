@@ -5,7 +5,7 @@
  */
 package optionNoLambda;
 
-public class Some<T, U> implements IOption<T, U> {
+public class Some<T> implements IOption<T> {
 
     public T value;
 
@@ -13,7 +13,7 @@ public class Some<T, U> implements IOption<T, U> {
         this.value = value;
     }
 
-    public U accept(IncOptionVisitor<T, U> visitor) {
+    public <U> U visit(IOptionVisitor<T, U> visitor) {
         return visitor.visit(this);
     }
 }
