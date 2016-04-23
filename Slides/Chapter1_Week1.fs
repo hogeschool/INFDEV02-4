@@ -42,7 +42,7 @@ let slides =
         Pause
         ! @"What does this mean?"
         Pause
-        ! @"Not maintainable sotware means expensive code that is hard to: bug fix, customizea, and takes lots of time to develop."
+        ! @"Not maintainable sotware means expensive code that is hard to: bug fix, customize, and takes lots of time to develop."
         Pause
         ! @"What can we do?"
         Pause

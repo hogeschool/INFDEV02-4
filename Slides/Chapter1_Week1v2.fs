@@ -200,7 +200,7 @@ let slides =
     SubSection("Recurrent patterns in objects interactions")
     ItemsBlock
       [
-        ! @"Disciplined interactions such as the one above tend to exhibit some recurring high level strutures;"
+        ! @"Disciplined interactions such as the one above tend to exhibit some recurring high level structures;"
         ! @"Such recurrent structures are known under the umbrella term of \textbf{design patterns}."
       ]
 
