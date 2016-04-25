@@ -7,11 +7,11 @@ public class MusicLibraryVisitor implements IMusicLibraryVisitor {
     public ArrayList<HeavyMetal> heavyMetal = new ArrayList<HeavyMetal>();
     public ArrayList<Jazz> jazz = new ArrayList<Jazz>();
 
-    public void visit(HeavyMetal song) {
+    public void onHeavyMetal(HeavyMetal song) {
         heavyMetal.add(song);
     }
 
-    public void visit(Jazz song) {
+    public void onJazz(Jazz song) {
         jazz.add(song);
     }
 }

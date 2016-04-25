@@ -9,8 +9,9 @@ package number;
  *
  * @author busal
  */
-public interface INumberVisitor {   
-    void visit(MyFloat number);
+public interface INumberVisitor {
 
-    void visit(MyInt number);
+    void onInt(MyInt number);
+
+    void onFloat(MyFloat number);
 }

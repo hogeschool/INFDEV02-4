@@ -1,9 +1,9 @@
 package musicLibrary;
 
 
-interface IMusicLibraryVisitor {
+public interface IMusicLibraryVisitor {
 
-    void visit(HeavyMetal number);
+    void onHeavyMetal(HeavyMetal number);
 
-    void visit(Jazz number);
+    void onJazz(Jazz number);
 }

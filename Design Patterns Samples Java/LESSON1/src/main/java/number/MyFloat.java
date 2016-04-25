@@ -1,9 +1,9 @@
 package number;
 
-class MyFloat implements INumber {
+public class MyFloat implements INumber {
 
     public void visit(INumberVisitor visitor) {
-        visitor.visit(this);
+        visitor.onFloat(this);
     }
 }
 

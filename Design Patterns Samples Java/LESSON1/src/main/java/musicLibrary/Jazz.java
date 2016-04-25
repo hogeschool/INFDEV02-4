@@ -8,7 +8,7 @@ public class Jazz implements ISong {
         this.title = title;
     }
 
-    public void visit(IMusicLibraryVisitor visitor) {
-        visitor.visit(this);
+   public void visit(IMusicLibraryVisitor visitor) {
+        visitor.onJazz(this);
     }
 }

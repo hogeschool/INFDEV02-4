@@ -7,7 +7,7 @@ package optionNoLambda;
 
 public class Some<T> implements IOption<T> {
 
-    public T value;
+    private T value;
 
     public Some(T value) {
         this.value = value;

@@ -9,6 +9,6 @@ public class HeavyMetal implements ISong {
     }
 
     public void visit(IMusicLibraryVisitor visitor) {
-        visitor.visit(this);
+        visitor.onHeavyMetal(this);
     }
 }
