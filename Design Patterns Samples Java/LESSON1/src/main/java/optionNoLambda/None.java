@@ -8,6 +8,6 @@ package optionNoLambda;
 class None<T> implements IOption<T> {
 
     public <U> U visit(IOptionVisitor<T, U> visitor) {
-        return visitor.visit(this);
+        return visitor.onNone();
     }
 }

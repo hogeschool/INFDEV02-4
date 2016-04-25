@@ -9,7 +9,7 @@ package optionNoLambda;
 
 public interface IOptionVisitor<T, U> {
 
-    U visit(Some<T> option);
+    U onSome(T value);
 
-    U visit(None<T> option);
+    U onNone();
 }

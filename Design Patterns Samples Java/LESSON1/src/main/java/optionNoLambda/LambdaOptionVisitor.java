@@ -13,11 +13,11 @@ public class LambdaOptionVisitor<T, U> implements IOptionVisitor<T, U> {
         this.onNone = onNone;
     }
 
-    public U visit(Some<T> option) {
-        return onSome.apply(option.value);
+    public U onSome(T value) {
+        return onSome.apply(value);
     }
 
-    public U visit(None<T> option) {
+    public U onNone() {
         return onNone.get();
     }
 }

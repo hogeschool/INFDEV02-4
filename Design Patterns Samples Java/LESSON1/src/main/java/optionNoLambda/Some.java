@@ -14,6 +14,6 @@ public class Some<T> implements IOption<T> {
     }
 
     public <U> U visit(IOptionVisitor<T, U> visitor) {
-        return visitor.visit(this);
+        return visitor.onSome(value);
     }
 }
