@@ -8,8 +8,8 @@ namespace OptionNoLambda
 {
   interface IOptionVisitor<T, U>
   {
-    U Visit(Some<T> option);
-    U Visit(None<T> option);
+    U onSome(T value);
+    U onNone();
   }
   interface Option<T> { U Visit<U>(IOptionVisitor<T, U> visitor); }
   class Some<T> : Option<T>
@@ -18,43 +18,55 @@ namespace OptionNoLambda
     public Some(T value) { this.value = value; }
     public U Visit<U>(IOptionVisitor<T, U> visitor)
     {
-      return visitor.Visit(this);
+      return visitor.onSome(this.value);
     }
   }
   class None<T> : Option<T>
   {
     public U Visit<U>(IOptionVisitor<T, U> visitor)
     {
-      return visitor.Visit(this);
+      return visitor.onNone();
     }
   }
-  class LambdaOptionVisitor<T, U> : IOptionVisitor<T, U>
+  class LambdaIOptionVisitor : IOptionVisitor<int, string>
   {
-    Func<T, U> onSome;
-    Func<U> onNone;
-    public LambdaOptionVisitor(Func<T, U> onSome, Func<U> onNone)
+    public string onNone()
     {
-      this.onSome = onSome;
-      this.onNone = onNone;
-    }
-    public U Visit(Some<T> option)
-    {
-      return onSome(option.value);
+      return "I am None";
     }
 
-    public U Visit(None<T> option)
+    public string onSome(int value)
+    {
+      return value.ToString();
+    }
+  }
+  class LambdaIOptionVisitor<T, U> : IOptionVisitor<T, U>
+  {
+    Func<T, U> _onSome;
+    Func<U> _onNone;
+    public LambdaIOptionVisitor(Func<T, U> onSome, Func<U> onNone)
+    {
+      this._onSome = onSome;
+      this._onNone = onNone;
+    }
+    public U onNone()
     {
       return onNone();
+    }
+
+    public U onSome(T value)
+    {
+      return onSome(value);
     }
   }
 }
 namespace OptionLambda
 {
-  public interface Option<T>
+  public interface IOption<T>
   {
     U Visit<U>(Func<U> onNone, Func<T, U> onSome);
   }
-  public class Some<T> : Option<T>
+  public class Some<T> : IOption<T>
   {
     T value;
     public Some(T value) { this.value = value; }
@@ -63,7 +75,7 @@ namespace OptionLambda
       return onSome(value);
     }
   }
-  public class None<T> : Option<T>
+  public class None<T> : IOption<T>
   {
     public U Visit<U>(Func<U> onNone, Func<T, U> onSome)
     {
@@ -161,10 +173,10 @@ namespace ConsoleApplication1
       //Console.WriteLine("Amount of jazz music: " + music_library_visitor.jazz.Count);
 
       //OPTION VISITOR version 1
-      IOptionVisitor<int, int> opt_visitor = new LambdaOptionVisitor<int, int>(i => i + 1, () => { throw new Exception("Expecting a value..."); });
-      Option<int> opt = new Some<int>(5);
-      int res = opt.Visit(opt_visitor);
-      Console.WriteLine(res);
+      //IOptionVisitor<int, int> opt_visitor = new LambdaIOptionVisitor<int, int>(i => i + 1, () => { throw new Exception("Expecting a value..."); });
+      //Option<int> opt = new Some<int>(5);
+      //int res = opt.Visit(opt_visitor);
+      //Console.WriteLine(res);
 
       //OPTION VISITOR version 2
       //Option<int> number = new Some<int>(5);
