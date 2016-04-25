@@ -28,11 +28,11 @@ namespace OptionNoLambda
       return visitor.onNone();
     }
   }
-  class LambdaIOptionVisitor : IOptionVisitor<int, string>
+  class PrettyPrinterIntIOptionVisitor : IOptionVisitor<int, string>
   {
     public string onNone()
     {
-      return "I am None";
+      return "I am nothing...";
     }
 
     public string onSome(int value)
