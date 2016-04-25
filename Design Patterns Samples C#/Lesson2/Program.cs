@@ -95,39 +95,13 @@ namespace Lesson2
   }
 
 
-  //optional
-  public abstract class IEnumeratorDecorator<T> : IEnumerator<T>
+  public class Map<T, U> : IEnumerator<U>
   {
-    protected IEnumerator<T> decoratedCollection;
-
-    public IEnumeratorDecorator(IEnumerator<T> c)
-    {
-      this.decoratedCollection = c;
-    }
-
-    public T Current
-    {
-      get
-      {
-        return decoratedCollection.Current;
-      }
-    }
-
-    public bool MoveNext()
-    {
-      return decoratedCollection.MoveNext();
-    }
-
-    public void Reset()
-    {
-      decoratedCollection.Reset();
-    }
-  }
-  public class Map<T, U> : IEnumeratorDecorator<T>
-  {
+    private IEnumerator<T> decoratedCollection;
     Func<T, U> f;
-    public Map(IEnumerator<T> collection, Func<T, U> f) : base(collection)
+    public Map(IEnumerator<T> collection, Func<T, U> f)
     {
+      this.decoratedCollection = collection;
       this.f = f;
     }
 
