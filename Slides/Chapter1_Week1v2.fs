@@ -505,11 +505,11 @@ let slides =
       [
         ItemsBlockWithTitle("A concrete visitor - LambdaIOptionVisitor<T, U>")
           [
-            ! @"We can adapt the ``non-lambda'' visitor that we say earlier so that it accepts lambda's as well."
+            ! @"We can adapt the ``non-lambda'' visitor that we introduced earlier so that it accepts lambda's as well."
           ]
         CSharpCodeBlock(TextSize.Tiny,
                   ((genericClassDef ["T"; "U"]
-                                    "LambdaOptionVisitor"
+                                    "LambdaIOptionVisitor"
                                     [implements "IOption<T>"
                                      typedDecl "oneSome" "Func<T, U>" |> makePrivate
                                      typedDecl "onNone" "Func<U>" |> makePrivate
