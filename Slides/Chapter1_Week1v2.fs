@@ -8,7 +8,7 @@ open Runtime
 
 let slides = 
   [
-    Section("Introduction")
+    Section("Dev 4")
     SubSection("Lecture topics")
     ItemsBlock
       [
@@ -17,6 +17,48 @@ let slides =
         !"The visitor design pattern"
         !"Course agenda"
         !"Conclusions"
+      ]
+    Section("Intro to DEV4")
+    SubSection("Exam")
+    ItemsBlock
+      [
+        !"written exam"
+        !"3 open questions"
+        !"stack/heap, type system, and UML"
+        !(@"no grade: go (score$\ge$75) or no go (otherwise)")
+      ]
+
+    SubSection("Exercises")
+    ItemsBlock
+      [
+        !"exercises to prepare step-by-step"
+        !"builds up to actual practicum"
+        !"there is no grade for this"
+      ]
+
+    SubSection("Assignments")
+    ItemsBlock
+      [
+        !"a connected series of programming tasks"
+        !"build a GUI framework"
+        !(@"\textbf{mandatory}, but with no direct grade")
+      ]
+
+    SubSection("Oral")
+    ItemsBlock
+      [
+        !"the oral is entirely based on the assignments"
+        !"we remove some pieces of code from the working solutions and you fill them back in"
+        !"the oral gives you the final grade for the course"
+      ]
+
+    SubSection("Expected study effort")
+    ItemsBlock
+      [
+        !(@"between 10 and 20 \textbf{net}\footnote{No, 9gag does not count even if the slides are open on another monitor} hours a week")
+        !"read every term on the slides and every sample"
+        !"if you do not understand it perfectly, either ask a teacher, google, or brainstorm with other students"
+        !(@"every sample of code on the slides you should both \textbf{understand} and \textbf{try out} on your machine")
       ]
 
     SubSection("What you have done so far")
@@ -245,7 +287,7 @@ let slides =
       ]
         
     Section("Visiting Option's")
-    SubSection("The Option<T> data structure")
+    SubSection("The IOption<T> data structure")
     ItemsBlock
       [
         ! @"Is used when an actual value of type \texttt{T} might or might not be variable;" 
@@ -259,12 +301,12 @@ let slides =
             ! @"The following code illustrates the use of the option type;"
             ! @"In this case we are capturing the number \texttt{5} within a \texttt{Some<int>} object;"
           ]
-        CSharpCodeBlock(TextSize.Tiny,(typedDeclAndInit "a_number" "Option<int>" (Code.New("Some<int>", [constInt(5)])) >> endProgram )) |> Unrepeated
+        CSharpCodeBlock(TextSize.Tiny,(typedDeclAndInit "a_number" "IOption<int>" (Code.New("Some<int>", [constInt(5)])) >> endProgram )) |> Unrepeated
         ItemsBlockWithTitle("Examples of usage")
           [
             ! @"In this case we capture the ``nothing'' common to all values of type \texttt{int} within a \texttt{None<int>} object;"
           ]
-        CSharpCodeBlock(TextSize.Tiny,(typedDeclAndInit "another_number" "Option<int>" (Code.New("None<int>", [])) >> endProgram )) |> Unrepeated
+        CSharpCodeBlock(TextSize.Tiny,(typedDeclAndInit "another_number" "IOption<int>" (Code.New("None<int>", [])) >> endProgram )) |> Unrepeated
       ]
 
     SubSection("Some<T> and None<T>")
@@ -272,12 +314,12 @@ let slides =
       [
         ItemsBlockWithTitle "Some<T> and None<T>"
           [
-            ! @"Both types implement the \texttt{Option<T>} data structure;"
+            ! @"Both types implement the \texttt{IOption<T>} data structure;"
           ]
         CSharpCodeBlock(TextSize.Tiny,
                         ((genericClassDef ["T"]
                                            "Some"
-                                            [implements "Option<T>"
+                                            [implements "IOption<T>"
                                              typedDecl "value" "T" |> makePublic
                                              typedDef "Some" ["T","value"] "" (("this.value" := var"value") >> endProgram) |> makePublic
                                              dots]
@@ -285,16 +327,16 @@ let slides =
         CSharpCodeBlock(TextSize.Tiny,
                         ((genericClassDef ["T"]
                                            "None"
-                                            [implements "Option<T>"
+                                            [implements "IOption<T>"
                                              typedDef "None" [] "" (endProgram) |> makePublic
                                              dots]
                                              ) >> endProgram )) |> Unrepeated
       ]
 
-    SubSection("Option<T>")
+    SubSection("IOption<T>")
     VerticalStack
       [
-      ItemsBlockWithTitle ("Option<T>")
+      ItemsBlockWithTitle ("IOption<T>")
         [
           ! @"Is an interface that represents both absence and presence of data of type \texttt{T};"
           ! @"We cannot give direct access to the \texttt{T} value here as \texttt{None} could not implement it!"
@@ -305,22 +347,22 @@ let slides =
       ]
 
     Section("Visiting Options without lambdas")
-    SubSection("Visiting an Option<T>")
+    SubSection("Visiting an IOption<T>")
     VerticalStack
       [
-        ItemsBlockWithTitle("Visiting an Option<T>")
+        ItemsBlockWithTitle("Visiting an IOption<T>")
           [            
-            ! @"We add a method \texttt{Visit} to the interface that accepts as input a ``Visitor'' (an \texttt{OptionVisitor<T, U>}) and returns a generic result;"            
+            ! @"We add a method \texttt{Visit} to the interface that accepts as input a ``Visitor'' (an \texttt{IOptionVisitor<T, U>}) and returns a generic result;"            
             ! @"The visitor object will able to identify the concrete type of the option (\texttt{Some} or \texttt{None}) and manipulate it accordingly\footnote{\textbf{Note}, in many literature this \texttt{Visit} method is generally called \texttt{Accept}}."
           ]
         CSharpCodeBlock(TextSize.Tiny,
-                        (GenericInterfaceDef (["T"], "Option", [typedSig "Visit<U>" [("OptionVisitor<T, U>","visitor")] "U"])) 
+                        (GenericInterfaceDef (["T"], "Option", [typedSig "Visit<U>" [("IOptionVisitor<T, U>","visitor")] "U"])) 
                          >> endProgram) |> Unrepeated
       ]
-    SubSection("The OptionVisitor<T, U>")
+    SubSection("The IOptionVisitor<T, U>")
     VerticalStack
       [
-        ItemsBlockWithTitle("What is an OptionVisitor<T, U>?")
+        ItemsBlockWithTitle("What is an IOptionVisitor<T, U>?")
           [
             ! @"An interface that provides a series of methods, one for each concrete class;"
             ! @"In our case we have two signatures one for visiting a concrete \texttt{Some} instance and one for the \texttt{None}."
@@ -330,17 +372,17 @@ let slides =
                                                                             typedSig "OnNone<U>" [] "U"])) 
                          >> endProgram) |> Unrepeated
       ]
-    SubSection("A concrete visitor - PrettyPrinterOptionVisitor<int, string>")
+    SubSection("A concrete visitor - PrettyPrinterIOptionVisitor<int, string>")
     VerticalStack
       [
-        ItemsBlockWithTitle("A concrete visitor - PrettyPrinterOptionVisitor<int, string>")
+        ItemsBlockWithTitle("A concrete visitor - PrettyPrinterIOptionVisitor<int, string>")
           [
             ! @"Provides a pretty printer for options containing integers."
           ]
         CSharpCodeBlock(TextSize.Tiny,
                   ((classDef 
                         "PrettyPrinterOptionVisitor"
-                        [implements "OptionVisitor<int, string>"
+                        [implements "IOptionVisitor<int, string>"
                          typedDef "OnSome<string>" [("int","value")] "string" ((Code.MethodCall("value", "ToString", []) |> ret) >> endProgram) |> makePublic
                          typedDef "OnNone<string>" [] "string" ((Code.ConstString("I'm none..") |> ret) >> endProgram) |> makePublic
                          ]
@@ -358,8 +400,8 @@ let slides =
       CSharpCodeBlock(TextSize.Tiny,
                         ((genericClassDef ["T"]
                                           "None"
-                                          [implements "Option<T>"
-                                           typedDef "Visit<U>" [("OptionVisitor<T, U>","visitor")] "U" ((Code.Call("visitor.onNone", []) |> ret) >> endProgram) |> makePublic
+                                          [implements "IOption<T>"
+                                           typedDef "Visit<U>" [("IOptionVisitor<T, U>","visitor")] "U" ((Code.Call("visitor.onNone", []) |> ret) >> endProgram) |> makePublic
                                            ]) >> endProgram )) |> Unrepeated
       ]
 
@@ -374,33 +416,33 @@ let slides =
         CSharpCodeBlock(TextSize.Tiny,
                          ((genericClassDef ["T"]
                                            "Some"
-                                            [implements "Option<T>"
+                                            [implements "IOption<T>"
                                              typedDecl "value" "T" |> makePublic
                                              typedDef "Some" ["T","value"] "" (("this.value" := var"value") >> endProgram) |> makePublic
-                                             typedDef "Visit<U>" [("OptionVisitor<T, U>","visitor")] "U" ((Code.Call("visitor.onSome", [var "this.value"]) |> ret) >> endProgram) |> makePublic
+                                             typedDef "Visit<U>" [("IOptionVisitor<T, U>","visitor")] "U" ((Code.Call("visitor.onSome", [var "this.value"]) |> ret) >> endProgram) |> makePublic
                                              ]
                                              ) >> endProgram )) |> Unrepeated
       ]
-    SubSection("Testing out our Option<T>")
+    SubSection("Testing out our IOption<T>")
     VerticalStack
       [
-      ItemsBlockWithTitle ("Testing out our Option<T>")
+      ItemsBlockWithTitle ("Testing out our IOption<T>")
         [
           ! @"The next line shows how to use our option to capture numbers and define operations over it;"
           ! @"More precisely we instantiate a \texttt{PrettyPrinterOptionVisitor}, which is then used to visit a \texttt{Some} containing the number 5."
         ]
       CSharpCodeBlock(TextSize.Tiny,
-                      (typedDeclAndInit "opt_visitor" "OptionVisitor<int, int>" (Code.New("PrettyPrinterOptionVisitor<int, string>", 
+                      (typedDeclAndInit "opt_visitor" "IOptionVisitor<int, int>" (Code.New("PrettyPrinterIOptionVisitor<int, string>", 
                                                                                            [])) >>
-                       typedDeclAndInit "number" "Option<int>" (Code.New("Some<int>", [constInt(5)])) >>
+                       typedDeclAndInit "number" "IOption<int>" (Code.New("Some<int>", [constInt(5)])) >>
                        Code.MethodCall( "number", "Visit", [(var "opt_visitor")]) >> endProgram)) |> Unrepeated
       ]
 
     Section("Visiting Options lambdas")
-    SubSection("Visiting an Option<T>")
+    SubSection("Visiting an IOption<T>")
     VerticalStack
       [
-        ItemsBlockWithTitle("Visiting an Option<T>")
+        ItemsBlockWithTitle("Visiting an IOption<T>")
           [
             ! @"Visiting also can be simplified;"
             ! @"We give directly the methods to choose from;"
@@ -422,7 +464,7 @@ let slides =
       CSharpCodeBlock(TextSize.Tiny,
                         ((genericClassDef ["T"]
                                           "None"
-                                          [implements "Option<T>"
+                                          [implements "IOption<T>"
                                            typedDef "Visit<U>" [("Func<U>","onNone"); ("Func<T, U>","onSome")] "U" ((Code.Call("onNone", []) |> ret) >> endProgram) |> makePublic
                                            ]) >> endProgram )) |> Unrepeated
       ]
@@ -437,38 +479,38 @@ let slides =
         CSharpCodeBlock(TextSize.Tiny,
                          ((genericClassDef ["T"]
                                            "Some"
-                                            [implements "Option<T>"
+                                            [implements "IOption<T>"
                                              typedDecl "value" "T" |> makePrivate
                                              typedDef "Some" ["T","value"] "" (("this.value" := var"value") >> endProgram) |> makePublic
                                              typedDef "Visit<U>" [("Func<U>","onNone"); ("Func<T, U>","onSome")] "U" ((Code.Call("onSome", [var "value"]) |> ret) >> endProgram) |> makePublic
                                              ]
                                              ) >> endProgram )) |> Unrepeated
       ]
-    SubSection("Testing out our Option<T>")
+    SubSection("Testing out our IOption<T>")
     VerticalStack
       [
-      ItemsBlockWithTitle ("Testing out our Option<T>")
+      ItemsBlockWithTitle ("Testing out our IOption<T>")
         [
           ! @"\texttt{String} conversion is now very streamlined."
         ]
       CSharpCodeBlock(TextSize.Tiny,
-                      (typedDeclAndInit "number" "Option<int>" (Code.New("Some<int>", [constInt(5)])) >>
+                      (typedDeclAndInit "number" "IOption<int>" (Code.New("Some<int>", [constInt(5)])) >>
                        typedDeclAndInit "inc_number" "int" (Code.MethodCall("number", "Visit", [Code.GenericLambdaFuncDecl([], Code.ConstString("I am None...") |> ret )
                                                                                                 Code.GenericLambdaFuncDecl(["x"], ret (Code.MethodCall("x", "toString",[])))])) >>
                                                                                                 endProgram )) |> Unrepeated
       ]
 
-    SubSection("Adapting lambdas in the first previous - LambdaOptionVisitor<T, U>")
+    SubSection("Adapting lambdas in the first previous - LambdaIOptionVisitor<T, U>")
     VerticalStack
       [
-        ItemsBlockWithTitle("A concrete visitor - LambdaOptionVisitor<T, U>")
+        ItemsBlockWithTitle("A concrete visitor - LambdaIOptionVisitor<T, U>")
           [
             ! @"We can adapt the ``non-lambda'' visitor that we say earlier so that it accepts lambda's as well."
           ]
         CSharpCodeBlock(TextSize.Tiny,
                   ((genericClassDef ["T"; "U"]
                                     "LambdaOptionVisitor"
-                                    [implements "Option<T>"
+                                    [implements "IOption<T>"
                                      typedDecl "oneSome" "Func<T, U>" |> makePrivate
                                      typedDecl "onNone" "Func<U>" |> makePrivate
                                      typedDef "LambdaOptionVisitor" ["Func<T, U>","onSome";"Func<U>","onNone"] "" (("this.onNone" := var"onNone") >> ("this.onSome" := var"onSome") >> endProgram) |> makePublic
