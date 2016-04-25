@@ -24,7 +24,7 @@ let slides =
       [
         !"written exam"
         !"3 open questions"
-        !"stack/heap, type system, and UML"
+        !"stack/heap, type system, and design patterns"
         !(@"no grade: go (score$\ge$75) or no go (otherwise)")
       ]
 
