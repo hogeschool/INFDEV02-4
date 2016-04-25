@@ -11,6 +11,7 @@ The general shape of a theoretical exam for \texttt{DEV 3} is made up of only tw
 \begin{lstlisting}
 public interface Option<T>
 {
+
   U Visit<U>(Func<U> onNone, Func<T, U> onSome);
 }
 public class Some<T> : Option<T>
@@ -38,9 +39,9 @@ Console.WriteLine(inc_number);
 \textbf{Concrete example of answer:}
 ...
 
-\textbf{Points:} \textit{4 (50\% of total).}
+\textbf{Points:} \textit{3 (30\% of total).}
 
-\textbf{Grading:} \textit{Full points for more than 90\% of correct names and values. Three points if at least all names are correctly placed on the stack with at least half the values correct. Half points for more than 40\% of correct names and values. Zero points otherwise.}
+\textbf{Grading:} \textit{one point per correctly filled-in execution step.}
 
 \textbf{Associated learning objective:} \glsfirst{abs}
 
@@ -83,10 +84,59 @@ Console.WriteLine(inc_number);
 \textbf{Concrete example of answer:} \textit{}
 ...
 
-\textbf{Points:} \textit{4 (50\% of total).}
+\textbf{Points:} \textit{4 (30\% of total).}
 
-\textbf{Grading:} \textit{Full points for more than 90\% of correct names and types. Three points if at least all names are correctly placed on the declarations and classes, with at least half the types correct. Half points for more than 40\% of correct names and types. Zero points otherwise.}
+\textbf{Grading:} \textit{Grading: one point per correctly filled-in type checking step.}
 
 \textbf{Associated learning objective:} \glsfirst{type}
+
+\paragraph{Question 3: } \ \\
+
+\textbf{General shape of question:} \textit{Given the following implementation of a design pattern fill in the missing blocks of code.}
+
+\textbf{Concrete example of question:} 
+
+\begin{tikzpicture}
+\node[draw] (PersonLocation Graph) {
+	\begin{minipage}{.85\linewidth}
+\lstset{numbers=left,basicstyle=\ttfamily\small}\lstset{language=[Sharp]C}
+\begin{lstlisting}[escapechar=!, frame=false]
+public interface Option<T>
+{
+! \textbf{\textit{BLOCK 1}}:!
+! \tikz \draw (0,0) -- (13,0) -- (13,1.5) -- (0,1.5) -- (0,0);!  
+}
+! \textbf{\textit{BLOCK 2}}:!
+! \tikz \draw (0,0) -- (13,0) -- (13,1.5) -- (0,1.5) -- (0,0);!
+{
+  T value;
+! \textbf{\textit{BLOCK 3}}:!
+! \tikz \draw (0,0) -- (13,0) -- (13,1.5) -- (0,1.5) -- (0,0);!
+  public U Visit<U>(Func<U> onNone, Func<T, U> onSome)
+  {
+    return onSome(value);
+  }
+}
+public class None<T> : Option<T>
+{
+! \textbf{\textit{BLOCK 4}}:!
+! \tikz \draw (0,0) -- (13,0) -- (13,1.5) -- (0,1.5) -- (0,0);!
+
+}
+...
+Option<int> number = new Some<int>(5);
+int inc_number = number.Visit(() => { throw new Exception("Expecting a value..."); }, i => i + 1);
+Console.WriteLine(inc_number);
+\end{lstlisting}
+\end{minipage}
+
+};
+\end{tikzpicture}
+\\
+\textbf{Points:} \textit{4 (40\% of total).}
+
+\textbf{Grading:} \textit{Grading: one point per correctly filled-in block of code.}
+
+\textbf{Associated learning objective:} \glsfirst{abs}
 
 \ \\
