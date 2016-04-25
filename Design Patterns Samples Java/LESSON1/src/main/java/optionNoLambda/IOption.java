@@ -1,6 +1,6 @@
 package optionNoLambda;
 
-public interface IOption<T, U> {
+public interface IOption<T> {
 
-    U accept(IncOptionVisitor<T, U> visitor);
+   <U> U visit(IOptionVisitor<T, U> visitor);
 }
