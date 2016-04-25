@@ -618,24 +618,16 @@ U result =
       ]
 
     
-    Section("Course structure")
+    SubSection("Course structure")
     ItemsBlock
       [
-        ! @"Lectures"
-        ItemsBlock
-          [ 
-            ! @"Intro to design patterns - Visiting polymorphic instances (1 lecture) TODAY"
-            ! @"Iterating collections - Iterator (1 lecture)"
-            ! @"Entities construction and event management - Factory + Observer  (1 lecture)"
-            ! @"Building state machines - Strategy (1 lecture)"
-            ! @"Extending behaviors - Decorator over Strategy (1 lecture)"
-            ! @"Composing behaviours - Adapter over Strategy and input (1 lecture)"
-            ! @"Live coding class (1 optional lecture)"
-          ]
-        ! @"Assignment"
-        ItemsBlock
-          [ ! @"Build a GUI application containing interactive buttons."]
+        ! @"Intro to design patterns - Visiting polymorphic instances"
+        ! @"Iterating collections - Iterator"
+        ! @"Extending behaviors - Decorator over Iterator"
+        ! @"Entities construction - Factory"
+        ! @"Composing behaviours - Adapter over input"
       ]
+    Section("Conclusions")
     SubSection("Conclusions")
     ItemsBlock
       [
