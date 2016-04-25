@@ -342,7 +342,7 @@ let slides =
           ! @"We cannot give direct access to the \texttt{T} value here as \texttt{None} could not implement it!"
         ]
       CSharpCodeBlock(TextSize.Tiny,
-                        (GenericInterfaceDef (["T"], "Option", [dots])) 
+                        (GenericInterfaceDef (["T"], "IOption", [dots])) 
                          >> endProgram) |> Unrepeated
       ]
 
@@ -356,7 +356,7 @@ let slides =
             ! @"The visitor object will able to identify the concrete type of the option (\texttt{Some} or \texttt{None}) and manipulate it accordingly\footnote{\textbf{Note}, in many literature this \texttt{Visit} method is generally called \texttt{Accept}}."
           ]
         CSharpCodeBlock(TextSize.Tiny,
-                        (GenericInterfaceDef (["T"], "Option", [typedSig "Visit<U>" [("IOptionVisitor<T, U>","visitor")] "U"])) 
+                        (GenericInterfaceDef (["T"], "IOption", [typedSig "Visit<U>" [("IOptionVisitor<T, U>","visitor")] "U"])) 
                          >> endProgram) |> Unrepeated
       ]
     SubSection("The IOptionVisitor<T, U>")
@@ -368,8 +368,8 @@ let slides =
             ! @"In our case we have two signatures one for visiting a concrete \texttt{Some} instance and one for the \texttt{None}."
           ]
         CSharpCodeBlock(TextSize.Tiny,
-                        (GenericInterfaceDef (["T"; "U"], "OptionVisitor", [typedSig "OnSome<U>" [("T","value")] "U"
-                                                                            typedSig "OnNone<U>" [] "U"])) 
+                        (GenericInterfaceDef (["T"; "U"], "IOptionVisitor", [typedSig "onSome<U>" [("T","value")] "U"
+                                                                             typedSig "onNone<U>" [] "U"])) 
                          >> endProgram) |> Unrepeated
       ]
     SubSection("A concrete visitor - PrettyPrinterIOptionVisitor<int, string>")
@@ -383,8 +383,8 @@ let slides =
                   ((classDef 
                         "PrettyPrinterOptionVisitor"
                         [implements "IOptionVisitor<int, string>"
-                         typedDef "OnSome<string>" [("int","value")] "string" ((Code.MethodCall("value", "ToString", []) |> ret) >> endProgram) |> makePublic
-                         typedDef "OnNone<string>" [] "string" ((Code.ConstString("I'm none..") |> ret) >> endProgram) |> makePublic
+                         typedDef "onSome<string>" [("int","value")] "string" ((Code.MethodCall("value", "ToString", []) |> ret) >> endProgram) |> makePublic
+                         typedDef "onNone<string>" [] "string" ((Code.ConstString("I'm none..") |> ret) >> endProgram) |> makePublic
                          ]
                           ) >> endProgram )) |> Unrepeated
 
@@ -449,7 +449,7 @@ let slides =
             ! @"One less interface and trivial classes."
           ]
         CSharpCodeBlock(TextSize.Tiny,
-                        (GenericInterfaceDef (["T"], "Option", [typedSig "Visit<U>" [("Func<U>","onNone"); ("Func<T, U>","onSome")] "U"])) 
+                        (GenericInterfaceDef (["T"], "IOption", [typedSig "Visit<U>" [("Func<U>","onNone"); ("Func<T, U>","onSome")] "U"])) 
                          >> endProgram) |> Unrepeated
       ]
 
