@@ -87,27 +87,27 @@ namespace Number
 { 
   interface INumberVisitor
   {
-    void Visit(MyFloat number);
-    void Visit(MyInt number);
+    void onMyFloat(MyFloat number);
+    void onMyInt(MyInt number);
   }
   class NumberVisitor : INumberVisitor
   {
-    public void Visit(MyFloat number) { Console.WriteLine("Found a float and now?"); }
-    public void Visit(MyInt number) { Console.WriteLine("Found an int and now?!"); }
+    public void onMyFloat(MyFloat number) { Console.WriteLine("Found a float and now?"); }
+    public void onMyInt(MyInt number) { Console.WriteLine("Found an int and now?!"); }
   }
   interface Number { void Visit(INumberVisitor visitor); }
   class MyInt : Number
   {
     void Number.Visit(INumberVisitor visitor)
     {
-      visitor.Visit(this);
+      visitor.onMyInt(this);
     }
   }
   class MyFloat : Number
   {
     void Number.Visit(INumberVisitor visitor)
     {
-      visitor.Visit(this);
+      visitor.onMyFloat(this);
     }
   }
 
@@ -116,16 +116,16 @@ namespace MusicLibrary
 {
   interface IMusicLibraryVisitor
   {
-    void Visit(HeavyMetal number);
-    void Visit(Jazz number);
+    void onHeavyMetal(HeavyMetal number);
+    void onJazz(Jazz number);
   }
   class MusicLibraryVisitor : IMusicLibraryVisitor
   {
     public List<HeavyMetal> heavyMetal = new List<HeavyMetal>();
     public List<Jazz> jazz = new List<Jazz>();
 
-    public void Visit(HeavyMetal song) { heavyMetal.Add(song); }
-    public void Visit(Jazz song) { jazz.Add(song); }
+    public void onHeavyMetal(HeavyMetal song) { heavyMetal.Add(song); }
+    public void onJazz(Jazz song) { jazz.Add(song); }
   }
   interface Song { void Visit(IMusicLibraryVisitor visitor); }
   class HeavyMetal : Song
@@ -134,7 +134,7 @@ namespace MusicLibrary
     public HeavyMetal(string title) { this.title = title; }
     public void Visit(IMusicLibraryVisitor visitor)
     {
-      visitor.Visit(this);
+      visitor.onHeavyMetal(this);
     }
   }
   class Jazz : Song
@@ -143,7 +143,7 @@ namespace MusicLibrary
     public Jazz(string title) { this.title = title; }
     public void Visit(IMusicLibraryVisitor visitor)
     {
-      visitor.Visit(this);
+      visitor.onJazz(this);
     }
   }
 }
