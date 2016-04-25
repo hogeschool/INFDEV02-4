@@ -122,7 +122,7 @@ let slides =
     SubSection("Finding the right amount of coupling")
     VerticalStack
       [
-        ItemsBlock
+        ItemsBlockWithTitle("Finding the right amount of coupling")
           [
             ! @"One could argue that: to avoid coupling we can put everything in one big class;"
             ! @"Unfortunately this does not solve the problem, since we can have coupling also within a single class."
@@ -383,6 +383,7 @@ let slides =
     SubSection("Visiting a Some<T>")
     VerticalStack
       [
+
         ItemsBlockWithTitle "Visiting a Some<T>"
           [
             ! @"When instantiating a \texttt{Some<T>} a data of type \texttt{T} is passed and stored inside a field \texttt{value};"
