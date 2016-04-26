@@ -1,4 +1,4 @@
-package optionLambda;
+package lesson1_visitor.optionLambda;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

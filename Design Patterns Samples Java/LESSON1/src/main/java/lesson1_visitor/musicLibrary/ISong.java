@@ -1,4 +1,4 @@
-package musicLibrary;
+package lesson1_visitor.musicLibrary;
 
 public interface ISong {
 

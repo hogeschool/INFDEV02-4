@@ -3,11 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package INFDEV4.lesson1;
+package lesson1_visitor;
 
-import number.*;
-import musicLibrary.*;
-import optionNoLambda.*;
+import lesson1_visitor.optionNoLambda.*;
 //import optionLambda.*;
 
 public class Lesson1 {

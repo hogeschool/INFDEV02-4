@@ -1,4 +1,4 @@
-package optionNoLambda;
+package lesson1_visitor.optionNoLambda;
 
 public interface IOption<T> {
 

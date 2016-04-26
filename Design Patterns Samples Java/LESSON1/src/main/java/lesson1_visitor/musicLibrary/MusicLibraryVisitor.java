@@ -1,11 +1,11 @@
-package musicLibrary;
+package lesson1_visitor.musicLibrary;
 
 import java.util.ArrayList;
 
 public class MusicLibraryVisitor implements IMusicLibraryVisitor {
 
-    public ArrayList<HeavyMetal> heavyMetal = new ArrayList<HeavyMetal>();
-    public ArrayList<Jazz> jazz = new ArrayList<Jazz>();
+    public ArrayList<HeavyMetal> heavyMetal = new ArrayList<>();
+    public ArrayList<Jazz> jazz = new ArrayList<>();
 
     public void onHeavyMetal(HeavyMetal song) {
         heavyMetal.add(song);

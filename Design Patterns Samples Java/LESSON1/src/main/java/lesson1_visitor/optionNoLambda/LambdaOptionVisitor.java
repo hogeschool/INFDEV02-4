@@ -1,4 +1,4 @@
-package optionNoLambda;
+package lesson1_visitor.optionNoLambda;
 
 import java.util.function.Supplier;
 import java.util.function.Function;

@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package optionNoLambda;
+package lesson1_visitor.optionNoLambda;
 
-class None<T> implements IOption<T> {
 
-    public <U> U visit(IOptionVisitor<T, U> visitor) {
-        return visitor.onNone();
-    }
+
+public interface IOptionVisitor<T, U> {
+
+    U onSome(T value);
+
+    U onNone();
 }
