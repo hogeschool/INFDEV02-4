@@ -44,9 +44,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chapter2_Week2.fs" />
     <Compile Include="Chapter1_Week1v2.fs" />
     <Compile Include="Chapter1_Week1.fs" />
     <Compile Include="UMLs.fs" />
