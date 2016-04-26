@@ -1,4 +1,4 @@
-package number;
+package lesson1_visitor.number;
 
 public class MyInt implements INumber {
 

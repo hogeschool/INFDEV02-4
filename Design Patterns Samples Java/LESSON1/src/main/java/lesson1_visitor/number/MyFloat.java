@@ -1,4 +1,6 @@
-package number;
+package lesson1_visitor.number;
+
+import lesson1_visitor.number.INumber;
 
 public class MyFloat implements INumber {
 
