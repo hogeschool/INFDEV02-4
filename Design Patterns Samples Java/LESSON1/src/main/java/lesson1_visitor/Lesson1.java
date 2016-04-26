@@ -30,10 +30,10 @@ public class Lesson1 {
 //        System.out.println("Amount of jazz music: " + music_library_visitor.jazz.size());
 
         //OPTION VISITOR version 1
-        IOptionVisitor<Integer, Integer> opt_visitor = new LambdaOptionVisitor<Integer, Integer>(i -> i + 1, () -> {
+        IOptionVisitor<Integer, Integer> opt_visitor = new LambdaOptionVisitor<>(i -> i + 1, () -> {
             throw new IllegalArgumentException("Expecting a value...");
         });
-        IOption<Integer> opt = new Some<Integer>(5);
+        IOption<Integer> opt = new Some<>(5);
         int res = opt.visit(opt_visitor);
         System.out.println(res);
 

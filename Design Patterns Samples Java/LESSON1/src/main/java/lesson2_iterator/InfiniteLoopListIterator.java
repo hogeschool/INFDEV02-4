@@ -11,8 +11,6 @@ public class InfiniteLoopListIterator<T> implements GofIterator<T> {
         this.list = list;
     }
 
-
-
     @Override
     public void first() {
         index = -1;

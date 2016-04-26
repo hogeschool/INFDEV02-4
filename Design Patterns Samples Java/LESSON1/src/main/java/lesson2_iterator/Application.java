@@ -1,14 +1,29 @@
 package lesson2_iterator;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class Application {
 
     public static void main(String[] args) {
 //        runNaturalNumbers();
-        runInfiniteLoop();
+//        runInfiniteLoop();
+        runMapIterator();
     }
 
+
+    private static void runMapIterator(){
+        List<Integer> list = Arrays.asList(0,1,2,3);
+        Map<Integer, Integer> map = new Map<Integer, Integer>(new InfiniteLoopListIterator(list), i -> i+2);
+
+        int i = 0;
+        while ( !map.isDone() && i < 10){
+            map.next();
+            System.out.println(map.currentItem());
+            i++;
+        }
+
+    }
 
     private static void runInfiniteLoop(){
         InfiniteLoopListIterator illi =
