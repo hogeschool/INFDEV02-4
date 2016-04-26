@@ -1,4 +1,4 @@
-package iterator;
+package iterator2;
 
 import java.util.function.Function;
 

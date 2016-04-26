@@ -1,4 +1,4 @@
-package iterator;
+package iterator2;
 
 public class NaturalNumbers implements GofIterator<Integer>{
     private final int FIRST = -1;

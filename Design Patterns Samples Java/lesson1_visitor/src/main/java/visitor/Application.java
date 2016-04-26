@@ -6,6 +6,7 @@
 package visitor;
 
 import java.util.ArrayList;
+import java.util.List;
 import visitor.musicLibrary.*;
 import visitor.number.*;
 //import visitor.optionNoLambda.*;
@@ -19,7 +20,7 @@ public class Application {
         INumber n = new MyInt();
         n.visit(n_visitor);
         MusicLibraryVisitor music_library_visitor = new MusicLibraryVisitor();
-        ArrayList<ISong> songs = new ArrayList<ISong>();
+        List<ISong> songs = new ArrayList<ISong>();
         songs.add(new HeavyMetal("Hallowed Be Thy Name"));
         songs.add(new Jazz("Autumn Leaves"));
         songs.add(new HeavyMetal("War Pigs"));
