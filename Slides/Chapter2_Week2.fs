@@ -33,7 +33,7 @@ let slides =
       [
         ItemsBlockWithTitle("Behavioral patterns")
           [
-            ! @"design patterns for identifying the fundamental communication behavior between entities"
+            ! @"Are design patterns for identifying the fundamental communication behavior between entities"
             ! @"Among such pattern we find:"
           ]
         ItemsBlock
@@ -111,16 +111,15 @@ let slides =
         ! @"We will see how the iterator provides a clean, almost trivial, general way representation for iterating collections"
       ]
 
-    SubSection("About collections")
+    SubSection("Different implementations for different collections")
     ItemsBlock
       [
-        ! @"They come in different shapes and implementations:"
-        ! @"Option (an option essentially is a ``one-element` collections'')"
         ! @"Stream of data"
         ! @"Records of a database"
         ! @"List of cars"
         ! @"Array of numbers"
         ! @"Array of Array of pixels (a matrix)"
+        ! @"Option (an option essentially is a ``one-element` collections'')"
         ! @"etc.."
       ]
       
@@ -249,14 +248,14 @@ let slides =
     SubSection("Implementing the Iterator<T>")
     ItemsBlock
         [
-          ! @"We now show a series of collections implementing such our interface"
+          ! @"We now show a series of collections implementing such interface"
         ]
     SubSection("Natural numbers")
     VerticalStack
       [
         ItemsBlockWithTitle("Natural numbers")
           [
-            ! @"The natural numbers are all integers greater or equals to 0"
+            ! @"The natural numbers are all integers greater than or equal to 0"
             ! @"We now wish to define a collection containing all natural numbers"
             ! @"To do so we define a data structure that implements our iterator"
             ! @"And starting from -1 (the successor of it is 0, the first natural number), which is stored in a field called \texttt{current}, whenever we call the \texttt{GetNext} method we increase such \texttt{current} and returns its value"
@@ -284,7 +283,7 @@ let slides =
         ItemsBlockWithTitle("Array<T>")
           [
             ! @"Our ``new'' array takes as input an object of type array"
-            ! @"Aa field \texttt{index} keeps tracking of the current index"
+            ! @"A field \texttt{index} keeps track of the current index"
             ! @"Whenever the \texttt{GetNext} method is called we check whether we reached the end of the array: if so we return \texttt{None}, otherwise we increase the index and return the value of the array at position \texttt{index} wrapped inside a \texttt{Some} object"
           ]
         CSharpCodeBlock( TextSize.Tiny,
@@ -318,7 +317,7 @@ let slides =
           [
             ! @"The main big difference now is that whenever we need to move throughout our collection we have to coordinate \texttt{GetCurrent}, \texttt{HasNext}, and \texttt{MoveNext}"
             ! @"As we can see, this adds a layer of complexity to the iteration and is error prone, since now we have to \textit{carefully} manipulate three methods (instead of one as for \texttt{Iterator<T>})"
-            ! @"In what follow we show how to make \texttt{UnsafeIterator} safe!"
+            ! @"In what follows we show how to make \texttt{UnsafeIterator} safe!"
           ]
       ]
     SubSection("Improving the UnsafeIterator<T> safeness")
