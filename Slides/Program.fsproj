@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="Chapter2_Week2.fs" />
     <Compile Include="Chapter1_Week1v2.fs" />
-    <Compile Include="Chapter1_Week1.fs" />
     <Compile Include="UMLs.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

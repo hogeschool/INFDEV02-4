@@ -7,123 +7,186 @@ using System.Threading.Tasks;
 using OptionLambda;
 namespace Lesson2
 {
-  public interface IEnumerator<T>
+  public interface Iterator<T>
+  {
+    IOption<T> GetNext();
+  }
+  public interface UnsafeIterator<T>
   {
     bool MoveNext();
     T Current { get; }
-    void Reset();
   }
-  public class NaturalList : IEnumerator<int>
+  public class AdapterIterator<T> : Iterator<T>
   {
-    private int current = -1;
-    public int Current
+    private UnsafeIterator<T> iterator;
+    public AdapterIterator(UnsafeIterator<T> iterator)
     {
-      get
-      {
-        if (current < 0)
-          throw new Exception("MoveNext first.");
-        return current;
-      }
+      this.iterator = iterator;
     }
 
-    public bool MoveNext()
+    public IOption<T> GetNext()
     {
-      current++;
-      return true;
+      if (iterator.MoveNext())
+      {
+        return new Some<T>(iterator.Current);
+      }
+      else return new None<T>();
     }
 
-    public void Reset() { current = -1; }
   }
-  public class CircularList<T> : IEnumerator<T>
+
+  namespace SafeCollections
   {
-    private List<T> list;
-    private int index = -1;
-    public CircularList(List<T> list)
+    public class NaturalList : Iterator<int>
     {
-      this.list = list;
-    }
-    private CircularList() { }
-    public T Current
-    {
-      get
+      private int current = -1;
+
+      public IOption<int> GetNext()
       {
-        if (index < 0)
-          throw new Exception("MoveNext first.");
-        return list[index];
+        current++;
+        return new Some<int>(current);
+      }
+
+    }
+    public class CircularList<T> : Iterator<T>
+    {
+      private List<T> list;
+      private int index = -1;
+      public CircularList(List<T> list)
+      {
+        this.list = list;
+      }
+      public IOption<T> GetNext()
+      {
+        if (index + 1 < list.Count)
+          index = 0;
+        else
+          index++;
+        return new Some<T>(list[index]);
       }
     }
-    public bool MoveNext()
+    public class Array<T> : Iterator<T>
     {
-      if (index + 1 < list.Count)
-        index = 0;
-      else
+      private T[] array;
+      private int index = -1;
+      public Array(T[] array) { this.array = array; }
+      public IOption<T> GetNext()
+      {
+        if (index + 1 < array.Length)
+          return new None<T>();
         index++;
-      return true;
-    }
-    public void Reset()
-    {
-      index = -1;
-    }
-  }
-  public class Array<T> : IEnumerator<T>
-  {
-    private T[] array;
-    private int index = -1;
-    public Array(T[] array) { this.array = array; }
-    private Array() { }
-    public T Current
-    {
-      get
-      {
-        if (index < 0)
-          throw new Exception("MoveNext first.");
-        return array[index];
+        return new Some<T>(array[index]);
       }
     }
-    public bool MoveNext()
-    {
-      if (index + 1 < array.Length)
-        return false;
-      index++;
-      return true;
-    }
-    public void Reset()
-    {
-      index = -1;
-    }
-
   }
-
-
-  public class Map<T, U> : IEnumerator<U>
+  namespace UnsafeCollections
   {
-    private IEnumerator<T> decoratedCollection;
-    Func<T, U> f;
-    public Map(IEnumerator<T> collection, Func<T, U> f)
+    public class NaturalList : UnsafeIterator<int>
     {
-      this.decoratedCollection = collection;
-      this.f = f;
-    }
-
-    new public U Current
-    {
-      get
+      private int current = -1;
+      public int Current
       {
-        return f(decoratedCollection.Current);
+        get
+        {
+          if (current < 0)
+            throw new Exception("MoveNext first.");
+          return current;
+        }
+      }
+
+      public bool MoveNext()
+      {
+        current++;
+        return true;
+      }
+
+      public void Reset() { current = -1; }
+    }
+    public class CircularList<T> : UnsafeIterator<T>
+    {
+      private List<T> list;
+      private int index = -1;
+      public CircularList(List<T> list)
+      {
+        this.list = list;
+      }
+      private CircularList() { }
+      public T Current
+      {
+        get
+        {
+          if (index < 0)
+            throw new Exception("MoveNext first.");
+          return list[index];
+        }
+      }
+      public bool MoveNext()
+      {
+        if (index + 1 < list.Count)
+          index = 0;
+        else
+          index++;
+        return true;
+      }
+      public void Reset()
+      {
+        index = -1;
       }
     }
-
-    new public bool MoveNext()
+    public class Array<T> : UnsafeIterator<T>
     {
-      return decoratedCollection.MoveNext();
+      private T[] array;
+      private int index = -1;
+      public Array(T[] array) { this.array = array; }
+      private Array() { }
+      public T Current
+      {
+        get
+        {
+          if (index < 0)
+            throw new Exception("MoveNext first.");
+          return array[index];
+        }
+      }
+      public bool MoveNext()
+      {
+        if (index + 1 < array.Length)
+          return false;
+        index++;
+        return true;
+      }
+      public void Reset()
+      {
+        index = -1;
+      }
+
     }
-
-    new public void Reset()
+    public class Map<T, U> : UnsafeIterator<U>
     {
-      decoratedCollection.Reset();
+      private UnsafeIterator<T> decoratedCollection;
+      Func<T, U> f;
+      public Map(UnsafeIterator<T> collection, Func<T, U> f)
+      {
+        this.decoratedCollection = collection;
+        this.f = f;
+      }
+
+      new public U Current
+      {
+        get
+        {
+          return f(decoratedCollection.Current);
+        }
+      }
+
+      new public bool MoveNext()
+      {
+        return decoratedCollection.MoveNext();
+      }
+
+
     }
   }
-
 
 
 
@@ -132,15 +195,18 @@ namespace Lesson2
   {
     static void Main(string[] args)
     {
-      IEnumerator<int> elems = new NaturalList();
-      Map<int, string> mapped_elems = new Map<int, string>(elems, x => x.ToString() + " is a string now..");
-      mapped_elems.MoveNext();
-      while (true)
-      {
-        Console.WriteLine(mapped_elems.Current);
-        mapped_elems.MoveNext();
-        Thread.Sleep(100);
-      }
+
+      Iterator<int> list = new AdapterIterator<int>(new UnsafeCollections.NaturalList());
+
+      //UnsafeIterator<int> elems = new NaturalList();
+      //Map<int, string> mapped_elems = new Map<int, string>(elems, x => x.ToString() + " is a string now..");
+      //mapped_elems.MoveNext();
+      //while (true)
+      //{
+      //  Console.WriteLine(mapped_elems.Current);
+      //  mapped_elems.MoveNext();
+      //  Thread.Sleep(100);
+      //}
 
     }
   }

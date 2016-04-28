@@ -143,27 +143,41 @@ let slides =
       [
         ! @"Take for example a linked list and an array:"
         ! @"The former is a dynamic data structure made of linked nodes. A linked list potentially might contains infinite nodes"
-        ! @"CODE"
         ! @"The latter is a static compact data structure. In an array the maximum number of elements is fixed"
-        ! @"CODE"
       ]
 
     SubSection("Iterating lists")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"Iterating a list requires a variable that references the current node in the list"
-        ! @"To move to the next node we need to manually update such variable, by assigning to it a reference to the next node"
-        ! @"CODE"
-        
+      ItemsBlockWithTitle "Iterating lists"
+        [
+          ! @"Iterating a list requires a variable that references the current node in the list"
+          ! @"To move to the next node we need to manually update such variable, by assigning to it a reference to the next node"
+        ]
+      CSharpCodeBlock(TextSize.Tiny,
+                      (dots >>
+                       typedDeclAndInit "list_of_numbers" "LinkedList<int>" (Code.New("LinkedList<int>", [])) >>
+                       Code.While(Code.Op(var "list_of_numbers.Tail", Operator.NotEquals, Code.None),
+                                  (dots >>
+                                   ("list_of_numbers" := var "list_of_numbers.Tail"))) >> dots)) |> Unrepeated
       ]
     SubSection("Iterating array")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"Iterating an array requires a variable (an index) containing a number representing the position of the current visited element"
-        ! @"To move to the next element we need to manually update the variable, increasing it by one."
-        ! @"CODE"
+      ItemsBlockWithTitle ("Iterating array")
+        [
+          ! @"Iterating an array requires a variable (an index) containing a number representing the position of the current visited element"
+          ! @"To move to the next element we need to manually update the variable, increasing it by one."
+        ]
+      CSharpCodeBlock(TextSize.Tiny,
+                      (dots >>
+                       arrayDeclAndInit "array_of_numbers" "int" (Code.NewArray("int", 5))  >>
+                       typedDecl "index" "int"  >>
+                       Code.For((AssignInline("index", (constInt(0)))),  
+                                (Code.Op(var "index", Operator.LessOrEquals, var "array_of_numbers.Length")), 
+                                (AssignInline ("index", Code.Op(var "index", Operator.Plus, constInt(1)))),
+                                dots) >> dots)) |> Unrepeated
       ]
-
 
     SubSection("The need for different collections")
     ItemsBlock
@@ -204,52 +218,137 @@ let slides =
       ]
     Section("The iterator design pattern")
     SubSection("The iterator design pattern")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"Is an interface \texttt{IEnumerator<T>} containing the following methods signatures"
-        ! @"SIGNATURES + EXAPLANATION"
+        ItemsBlockWithTitle("The iterator design pattern")
+          [
+            ! @"Is an interface \texttt{Iterator<T>} containing the following method signature"
+          ]
+        CSharpCodeBlock(TextSize.Tiny,
+                        (GenericInterfaceDef (["T"], "Iterator", [typedSig "GetNext" [] "IOption<T>"])) 
+                         >> endProgram) |> Unrepeated
       ]
-    SubSection("Implementing the IEnumerator<T>")
+    SubSection("Implementing the Iterator<T>")
     ItemsBlock
       [
         ! @"At this point every collection that wants to provide a disciplined and controlled iteration mechanism has to implement such interface"
-        ! @"We now show a series of collections implementing such our interface"
       ]
-    SubSection("Option")
+    UML
+        [ Package("Iterator", 
+                  [
+                   Class("Client", 0.0, 3.0, Option.None, [], [])
+                   Interface("Iterator<T>",5.0,0.0,0.0,[Operation("GetNext", [], Some "IOption<T>")])
+                   Class("Coll1<T>", -6.5, -3.0, Some "Iterator<T>", [], [Operation("GetNext", [], Some "IOption<T>")])
+                   Class("Coll2<T>", 0.0, -3.0, Some "Iterator<T>", [], [Operation("GetNext", [], Some "IOption<T>")])
+                   Class("CollN<T>", 6.5, -3.0, Some "Iterator<T>", [], [Operation("GetNext", [], Some "IOption<T>")])
+                   Aggregation("Client","",Option.None,"Iterator<T>")
+
+                   ])
+
+        ]
+    SubSection("Implementing the Iterator<T>")
     ItemsBlock
-      [
-        ! @"..."
-      ]
+        [
+          ! @"We now show a series of collections implementing such our interface"
+        ]
     SubSection("Natural numbers")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"..."
+        ItemsBlockWithTitle("Natural numbers")
+          [
+            ! @"The natural numbers are all integers greater or equals to 0"
+            ! @"We now wish to define a collection containing all natural numbers"
+            ! @"To do so we define a data structure that implements our iterator"
+            ! @"And starting from -1 (the successor of it is 0, the first natural number), which is stored in a field called \texttt{current}, whenever we call the \texttt{GetNext} method we increase such \texttt{current} and returns its value"
+          ]
+        CSharpCodeBlock( TextSize.Tiny,
+                        (classDef "NaturalList" 
+                          [
+                          implements "Iterator<int>"
+                          typedDeclAndInit "current" "int" (constInt(-1)) |> makePrivate
+                          typedDef "GetNext" [] "IOption<int>" ("current" := (ConstInt(1)) >> 
+                                                                (Code.New("Some<int>",[var "current"]) |> ret) >> endProgram)
+                          ])) |> Unrepeated          
       ]
     SubSection("Array<T>")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"..."
+        ItemsBlockWithTitle("Array<T>")
+          [
+            ! @"Dealing with array requires to deal with its indexes"
+            ! @"We hide such complexity, which often is error-prone, by means of our iterator"
+          ]
       ]
-    SubSection("Iterator - formalization")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"UML"
-        ! @"Syntax"
-        ! @"Semantics"
+        ItemsBlockWithTitle("Array<T>")
+          [
+            ! @"Our ``new'' array takes as input an object of type array"
+            ! @"Aa field \texttt{index} keeps tracking of the current index"
+            ! @"Whenever the \texttt{GetNext} method is called we check whether we reached the end of the array: if so we return \texttt{None}, otherwise we increase the index and return the value of the array at position \texttt{index} wrapped inside a \texttt{Some} object"
+          ]
+        CSharpCodeBlock( TextSize.Tiny,
+                        (genericClassDef ["T"]
+                          "Array" 
+                          [
+                          implements "Iterator<T>"
+                          typedDecl "array" "T[]" |> makePrivate
+                          typedDeclAndInit "index" "int" (constInt(-1)) |> makePrivate
+                          typedDef "Array" ["T[]","array"] "" (("this.array" := var"array") >> endProgram) |> makePublic
+                          typedDef "GetNext" [] "IOption<int>" (Code.If((Code.Op((Code.Op(var "index" ,Operator.Plus, ConstInt(1) ),Operator.LessThan, var "array.Length")),
+                                                                         (Code.New("None<T>",[]) |> ret),
+                                                                         (("index" := Code.Op(var "index" ,Operator.Plus, ConstInt(1))) >> 
+                                                                          (Code.New("Some<int>",[var "array[index]"]) |> ret)))) >> endProgram)
+                          ])) |> Unrepeated          
       ]
+
     SubSection("The iterator in literature")
-    ItemsBlock
+    VerticalStack
       [
-        ! @"Is an interface \texttt{UnsafeIEnumerator<T>} containing the following methods signatures"
-        ! @"CODE"
-        ! @"It is unsafe"
+        ItemsBlockWithTitle("The iterator in literature")
+          [
+            ! @"In literature it is often the case to see our Iterator as an interface containing the following signatures"
+          ]
+        CSharpCodeBlock(TextSize.Tiny,
+                        (GenericInterfaceDef (["T"], "UnsafeIterator", [typedSig "MoveNext" [] "bool"
+                                                                        typedSig "GetCurrent" [] "T"])) 
+                         >> endProgram) |> Unrepeated
+        ItemsBlock
+          [
+            ! @"The main big difference now is that whenever we need to coordinate \texttt{GetCurrent} and \texttt{MoveNext} in order to move through the collection"
+            ! @"This adds a layer of complexity to the iterator that (to some extent) is not necessary. After all we only want to go iterate all items of a collection"
+            ! @"In what follow we show how to adapt entities implementing this interface with our original \texttt{Iterator<T>} interface"
+          ]
       ]
-    SubSection("Improving the UnsafeIEnumerator<T> safeness")
-    ItemsBlock
+    SubSection("Improving the UnsafeIterator<T> safeness")
+    VerticalStack
       [
-        ! @"We adapt it to the our IEnumerator<T>"
-        ! @"CODE"
-      ]
+        ItemsBlockWithTitle("Improving the UnsafeIterator<T> safeness")
+          [
+            ! @"Adapting our \texttt{UnsafeIterator} will require us to define an adapter \texttt{AdapterIterator} that implements our \texttt{Iterator}"
+            ! @"The \texttt{AdapterIterator} takes as input an \texttt{UnsafeIterator} and whenever the \texttt{GetNext} method is called it calls \texttt{GetCurrent} and \texttt{MoveNext} accordingly"
+          ]
+        CSharpCodeBlock( TextSize.Tiny,
+                        (genericClassDef ["T"]
+                          "AdapterIterator" 
+                          [
+                          implements "Iterator<T>"
+                          typedDecl "iterator" "UnsafeIterator<T>" |> makePrivate
+                          typedDef "AdapterIterator" ["UnsafeIterator<T>","iterator"] "" (("this.iterator" := var"iterator") >> endProgram) |> makePublic
+                          typedDef "GetNext" [] "IOption<int>" (Code.If(MethodCall("iterator","MoveNext",[]),
+                                                                         (Code.New("Some<int>",[MethodCall("iterator" , " GetCurrent", [])]) |> ret),
+                                                                         (Code.New("None<T>",[]) |> ret)))])) |> Unrepeated
+      ] 
+    VerticalStack
+      [
+        ItemsBlockWithTitle("AdapterIterator examples of usage")
+          [
+            ! @"In what follows we show how to use our adapter"
+            ! @"Note in this case \texttt{NaturalList} is a class that implements the \texttt{UnsafeIterator} interface"
+          ]
+        CSharpCodeBlock( TextSize.Tiny,
+                        (typedDeclAndInit "iterator" "Iterator<int>" (Code.New("AdapterIterator<int>", [Code.New("NaturalList", [])])))) |> Unrepeated
+      ] 
     SubSection("Conclusions")
     ItemsBlock
       [

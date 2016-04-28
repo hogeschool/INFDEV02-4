@@ -203,8 +203,8 @@ let slides =
         Interface("IB",3.0,3.0,0.0,[])
         Class("A", -3.0, -3.0, Some "IA", [], [])
         Class("B", 3.0, -3.0, Some "IB", [], [])
-        Aggregation("A","ib",1,"IB")
-        Aggregation("B","ia",1,"IA")
+        Aggregation("A","ib",Some 1,"IB")
+        Aggregation("B","ia",Some 1,"IA")
       ]
 
     VerticalStack
@@ -604,8 +604,8 @@ U result =
     UML
       [ Package("Visitor", 
                 [Interface("I",10.0,0.0,0.0,[Operation("Visit<U>", [@"onC1 : FieldsC1 $\rightarrow$ U"; "..." ; @"onCN : FieldsCN $\rightarrow$ U"], Some "U")])
-                 Class("C1", -3.0, -3.0, Some "M", [Attribute("value", "FieldsC1")], [Operation("Visit<U>", [@"onC1 : FieldsC1 $\rightarrow$ U"; "..."], Some "U")])
-                 Class("CN", 3.0, -3.0, Some "M", [Attribute("value", "FieldsCN")], [Operation("Visit<U>", ["..."; @"onCN : FieldsCN $\rightarrow$ U"], Some "U")])
+                 Class("C1", -3.0, -3.0, Some "I", [Attribute("value", "FieldsC1")], [Operation("Visit<U>", [@"onC1 : FieldsC1 $\rightarrow$ U"; "..."], Some "U")])
+                 Class("CN", 3.0, -3.0, Some "I", [Attribute("value", "FieldsCN")], [Operation("Visit<U>", ["..."; @"onCN : FieldsCN $\rightarrow$ U"], Some "U")])
                  ])
 
       ]
