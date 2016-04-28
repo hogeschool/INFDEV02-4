@@ -310,14 +310,15 @@ let slides =
             ! @"In literature it is often the case to see our Iterator as an interface containing the following signatures"
           ]
         CSharpCodeBlock(TextSize.Tiny,
-                        (GenericInterfaceDef (["T"], "UnsafeIterator", [typedSig "MoveNext" [] "bool"
+                        (GenericInterfaceDef (["T"], "UnsafeIterator", [typedSig "MoveNext" [] "void"
+                                                                        typedSig "HasNext" [] "bool"
                                                                         typedSig "GetCurrent" [] "T"])) 
                          >> endProgram) |> Unrepeated
         ItemsBlock
           [
-            ! @"The main big difference now is that whenever we need to coordinate \texttt{GetCurrent} and \texttt{MoveNext} in order to move through the collection"
-            ! @"This adds a layer of complexity to the iterator that (to some extent) is not necessary. After all we only want to go iterate all items of a collection"
-            ! @"In what follow we show how to adapt entities implementing this interface with our original \texttt{Iterator<T>} interface"
+            ! @"The main big difference now is that whenever we need to move throughout our collection we have to coordinate \texttt{GetCurrent}, \texttt{HasNext}, and \texttt{MoveNext}"
+            ! @"As we can see, this adds a layer of complexity to the iteration and is error prone, since now we have to \textit{carefully} manipulate three methods (instead of one as for \texttt{Iterator<T>})"
+            ! @"In what follow we show how to make \texttt{UnsafeIterator} safe!"
           ]
       ]
     SubSection("Improving the UnsafeIterator<T> safeness")
@@ -332,23 +333,39 @@ let slides =
                         (genericClassDef ["T"]
                           "AdapterIterator" 
                           [
-                          implements "Iterator<T>"
-                          typedDecl "iterator" "UnsafeIterator<T>" |> makePrivate
-                          typedDef "AdapterIterator" ["UnsafeIterator<T>","iterator"] "" (("this.iterator" := var"iterator") >> endProgram) |> makePublic
-                          typedDef "GetNext" [] "IOption<int>" (Code.If(MethodCall("iterator","MoveNext",[]),
-                                                                         (Code.New("Some<int>",[MethodCall("iterator" , " GetCurrent", [])]) |> ret),
-                                                                         (Code.New("None<T>",[]) |> ret)))])) |> Unrepeated
+                            implements "Iterator<T>"
+                            typedDecl "iterator" "UnsafeIterator<T>" |> makePrivate
+                            typedDef "AdapterIterator" ["UnsafeIterator<T>","iterator"] "" (("this.iterator" := var"iterator") >> endProgram) |> makePublic
+                            typedDef "GetNext" [] "IOption<int>" (Code.If(MethodCall("iterator","HasNext",[]),
+                                                                           ((MethodCall("iterator" , "MoveNext", [])) >>
+                                                                            (Code.New("Some<int>",[MethodCall("iterator" , "GetCurrent", [])]) |> ret)),
+                                                                           (Code.New("None<T>",[]) |> ret)))])) |> Unrepeated
       ] 
+    SubSection("Iterating an IOption<T>")
     VerticalStack
       [
-        ItemsBlockWithTitle("AdapterIterator examples of usage")
+        ItemsBlockWithTitle("Iterating an IOption<T>")
           [
-            ! @"In what follows we show how to use our adapter"
-            ! @"Note in this case \texttt{NaturalList} is a class that implements the \texttt{UnsafeIterator} interface"
+            ! @"We could also make our \texttt{IOption<T>} iterable"
+            ! @"To do so, we have to return \texttt{Some} only the first time we it and \texttt{None} for all successive iterations"
+            ! @"Note, if we iterate a \texttt{None} entity we return \texttt{None}"
           ]
         CSharpCodeBlock( TextSize.Tiny,
-                        (typedDeclAndInit "iterator" "Iterator<int>" (Code.New("AdapterIterator<int>", [Code.New("NaturalList", [])])))) |> Unrepeated
+                        (genericClassDef ["T"]
+                          "IOptionAdapter" 
+                          [
+                            implements "Iterator<T>"
+                            typedDecl "option" "IOption<T>" |> makePrivate
+                            typedDeclAndInit "visited" "bool" (constBool(false)) |> makePrivate
+                            typedDef "IOptionAdapter" ["IOption<T>","option"] "" (("this.option" := var"option") >> endProgram) |> makePublic
+                            typedDef "GetNext" [] "IOption<int>" (Code.If(var ("visited"),
+                                                                           (Code.New("None<T>",[]) |> ret),
+                                                                           (("visited" := ConstBool(true)) >>
+                                                                            (MethodCall("option" , "Visit<IOption<T>>", 
+                                                                                       [(Code.GenericLambdaFuncDecl([], Code.New("None<T>", []) |> ret) )
+                                                                                        (Code.GenericLambdaFuncDecl(["t"], Code.New("Some<T>", [var "t"]) |> ret) )]) |> ret))))])) |> Unrepeated
       ] 
+
     SubSection("Conclusions")
     ItemsBlock
       [

@@ -16,10 +16,29 @@ namespace Lesson2
     bool MoveNext();
     T Current { get; }
   }
-  public class AdapterIterator<T> : Iterator<T>
+  public class IOptionAdapter<T> : Iterator<T>
+  {
+    private IOption<T> option;
+    private bool visited = false;
+    public IOptionAdapter(IOption<T> option)
+    {
+      this.option = option;
+    }
+    public IOption<T> GetNext()
+    {
+      if (visited)
+        return new None<T>();
+      else
+      {
+        visited = true;
+        return option.Visit<IOption<T>>(() => new None<T>(), t => new Some<T>(t));
+      }
+    }
+  }
+  public class UnsafeIteratorAdapter<T> : Iterator<T>
   {
     private UnsafeIterator<T> iterator;
-    public AdapterIterator(UnsafeIterator<T> iterator)
+    public UnsafeIteratorAdapter(UnsafeIterator<T> iterator)
     {
       this.iterator = iterator;
     }
@@ -196,7 +215,7 @@ namespace Lesson2
     static void Main(string[] args)
     {
 
-      Iterator<int> list = new AdapterIterator<int>(new UnsafeCollections.NaturalList());
+      Iterator<int> list = new UnsafeIteratorAdapter<int>(new UnsafeCollections.NaturalList());
 
       //UnsafeIterator<int> elems = new NaturalList();
       //Map<int, string> mapped_elems = new Map<int, string>(elems, x => x.ToString() + " is a string now..");

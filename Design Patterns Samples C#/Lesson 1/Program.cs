@@ -28,6 +28,18 @@ namespace OptionNoLambda
       return visitor.onNone();
     }
   }
+  class PrettyPrinterIOptionVisitor<T> : IOptionVisitor<T, string>
+  {
+    public string onNone()
+    {
+      return "I am nothing...";
+    }
+
+    public string onSome(T value)
+    {
+      return value.ToString();
+    }
+  }
   class PrettyPrinterIntIOptionVisitor : IOptionVisitor<int, string>
   {
     public string onNone()
