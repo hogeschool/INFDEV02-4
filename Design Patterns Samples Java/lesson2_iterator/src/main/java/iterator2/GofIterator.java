@@ -1,4 +1,4 @@
-package iterator;
+package iterator2;
 
 public interface GofIterator<T> {
     void first();
