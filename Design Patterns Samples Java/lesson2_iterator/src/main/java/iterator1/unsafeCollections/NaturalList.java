@@ -1,8 +1,8 @@
-package iterator1;
+package iterator1.unsafeCollections;
 
-public class NaturalList implements IEnumerator<Integer> {
+public class NaturalList implements IUnsafeIterator<Integer> {
 
-    private Integer current = -1;
+    private int current = -1;
 
     public Integer getCurrent() {
         if (current < 0) {

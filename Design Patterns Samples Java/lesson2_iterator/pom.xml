@@ -11,4 +11,11 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <name>lesson2_iterator</name>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>lesson1_visitor</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

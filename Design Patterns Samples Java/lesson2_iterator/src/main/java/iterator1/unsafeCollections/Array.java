@@ -3,37 +3,38 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package iterator1;
+package iterator1.unsafeCollections;
 
-import iterator1.IEnumerator;
-import java.util.List;
+public class Array<T> implements IUnsafeIterator<T> {
 
-public class CircularList<T> implements IEnumerator<T> {
+    private T[] array;
+    private int index = -1;
 
-    private List<T> list;
-    private int index;
-
-    public CircularList(List<T> list) {
-        this.list = list;
-        reset();
+    public Array(T[] array) {
+        this.array = array;
     }
 
-    private CircularList() {
+    private Array() {
     }
 
     public T getCurrent() {
         if (index < 0) {
             throw new RuntimeException("moveNext first...");
         }
-        return list.get(index);
+        return array[index];
+
     }
 
     public boolean moveNext() {
-        index = (index + 1) % list.size();
+        if (index + 1 < array.length) {
+            return false;
+        }
+        index++;
         return true;
     }
 
     public void reset() {
         index = -1;
     }
+
 }
