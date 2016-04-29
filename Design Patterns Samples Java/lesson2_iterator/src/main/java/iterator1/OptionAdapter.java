@@ -27,8 +27,7 @@ import visitor.optionLambda.Some;
       else
       {
         visited = true;
-//        return option.visit<IOption<T>>(() -> new None<T>(), t -> new Some<T>(t));
-        return option.visit(() -> new None<T>(), t -> new Some<T>(t));
+        return  option.visit(() -> new None<T>(), t -> new Some<T>(t));
       }
     }
   }
