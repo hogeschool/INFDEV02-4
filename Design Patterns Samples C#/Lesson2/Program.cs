@@ -11,7 +11,7 @@ namespace Lesson2
     {
         IOption<T> GetNext();
     }
-    public interface UnsafeIterator<T>
+    public interface IUnsafeIterator<T>
     {
         bool MoveNext();
         T Current { get; }
@@ -37,8 +37,8 @@ namespace Lesson2
     }
     public class UnsafeIteratorAdapter<T> : Iterator<T>
     {
-        private UnsafeIterator<T> iterator;
-        public UnsafeIteratorAdapter(UnsafeIterator<T> iterator)
+        private IUnsafeIterator<T> iterator;
+        public UnsafeIteratorAdapter(IUnsafeIterator<T> iterator)
         {
             this.iterator = iterator;
         }
@@ -97,7 +97,7 @@ namespace Lesson2
     }
     namespace UnsafeCollections
     {
-        public class NaturalList : UnsafeIterator<int>
+        public class NaturalList : IUnsafeIterator<int>
         {
             private int current = -1;
             public int Current
@@ -118,7 +118,7 @@ namespace Lesson2
 
             public void Reset() { current = -1; }
         }
-        public class CircularList<T> : UnsafeIterator<T>
+        public class CircularList<T> : IUnsafeIterator<T>
         {
             private List<T> list;
             private int index = -1;
@@ -149,7 +149,7 @@ namespace Lesson2
                 index = -1;
             }
         }
-        public class Array<T> : UnsafeIterator<T>
+        public class Array<T> : IUnsafeIterator<T>
         {
             private T[] array;
             private int index = -1;
@@ -177,11 +177,11 @@ namespace Lesson2
             }
 
         }
-        public class Map<T, U> : UnsafeIterator<U>
+        public class Map<T, U> : IUnsafeIterator<U>
         {
-            private UnsafeIterator<T> decoratedCollection;
+            private IUnsafeIterator<T> decoratedCollection;
             Func<T, U> f;
-            public Map(UnsafeIterator<T> collection, Func<T, U> f)
+            public Map(IUnsafeIterator<T> collection, Func<T, U> f)
             {
                 this.decoratedCollection = collection;
                 this.f = f;
