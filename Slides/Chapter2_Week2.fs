@@ -364,7 +364,7 @@ let slides =
                                                                                        [(Code.GenericLambdaFuncDecl([], Code.New("None<T>", []) |> ret) )
                                                                                         (Code.GenericLambdaFuncDecl(["t"], Code.New("Some<T>", [var "t"]) |> ret) )]) |> ret))))])) |> Unrepeated
       ] 
-
+    Section("Conclusions")
     SubSection("Conclusions")
     ItemsBlock
       [
