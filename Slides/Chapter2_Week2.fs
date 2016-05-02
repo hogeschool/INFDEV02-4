@@ -6,9 +6,9 @@ open CodeDefinitionImperative
 open Interpreter
 open Runtime
 
-let slides = 
+let slides (title : string) = 
   [
-    Section("Dev 4 - Lecture topics")
+    Section(sprintf "%s - Lecture topics" title)
     SubSection("Lecture topics")
     ItemsBlock
       [
