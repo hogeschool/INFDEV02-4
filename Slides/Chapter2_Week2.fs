@@ -8,7 +8,8 @@ open Runtime
 
 let slides = 
   [
-    Section("Dev 4 - Lecture topics")
+    Section("Iterating collections")
+    Section("Introduction")
     SubSection("Lecture topics")
     ItemsBlock
       [
@@ -18,10 +19,9 @@ let slides =
         ! @"Conclusions"
       ]
     Section("A taxonomy of design patterns")
-    SubSection("Introduction")
     VerticalStack
       [
-      ItemsBlockWithTitle("Introduction")
+      ItemsBlockWithTitle("A taxonomy of design patterns")
         [
           ! @"After having seen the first design pattern, we can add some depth to the discussion"
           ! @"Design patterns have been grouped in several specific categories (we will show at least one design pattern per category):"

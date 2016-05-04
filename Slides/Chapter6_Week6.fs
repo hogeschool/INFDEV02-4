@@ -8,11 +8,13 @@ open Runtime
 
 let slides = 
   [
-     ! @"Today we are going to study the a behavioral pattern: the strategy design pattern"
-     ! @"Expressing behavior selection at runtime by means of ``if's'' is complex and error prone"
-     ! @"Examples"
-     ! @"The strategy design pattern allows the definition of a family of algorithms (behavior) that can be interchanged at runtime"
-     ! @"The strategy lets behaviors vary independently from programs that use it"
+     ! @"THIS CLASS IS OPTIONAL"
+     ! @"Today we are going to study the a behavioral pattern: the observer design pattern"
+     ! @"Reasons: sometimes we want a piece of code to be automatically executed after a change in the state"
+     ! @"Example of doing it by means of abstract classes"
+     ! @"Example of doing it by means of a list lambdas"
+     ! @"The observer design pattern: is a design pattern in which an object called \textbf{subject}, maintains a list of objects called \textbf{observers}, and notifies them on any state changes, usually calling one of their methods"
+     ! @"It defines a one-to-many dependency"
      ! @"Formalization"
      ! @"Conclusions"
   ]
