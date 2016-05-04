@@ -6,9 +6,9 @@ open CodeDefinitionImperative
 open Interpreter
 open Runtime
 
-let slides = 
+let slides (title : string) = 
   [
-    Section("Adapting interfaces")
+    Section(sprintf "%s" title)
     Section("Introduction")
     SubSection("Lecture topics")
     ItemsBlock
@@ -18,7 +18,7 @@ let slides =
         ! @"Examples and considerations"
         ! @"Conclusions"
       ]
-    SubSection("The adapter design pattern")
+    Section("The adapter design pattern")
     SubSection("Introduction")
     ItemsBlock
       [

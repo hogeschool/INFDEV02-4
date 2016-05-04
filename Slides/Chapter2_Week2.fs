@@ -8,8 +8,7 @@ open Runtime
 
 let slides (title : string) = 
   [
-    Section(sprintf "%s - Lecture topics" title)
-    Section("Iterating collections")
+    Section(sprintf "%s" title)
     Section("Introduction")
     SubSection("Lecture topics")
     ItemsBlock
