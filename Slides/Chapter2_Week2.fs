@@ -185,7 +185,7 @@ let slides (title : string) =
                        dots >>
                        Code.While(Code.Op(var "list_of_numbers.Tail", Operator.NotEquals, Code.None),
                                   (dots >>
-                                   ("list_of_numbers" := var "list_of_numbers.Tail"))) >> dots)) |> Unrepeated
+                                   ("list_of_numbers" := var "list_of_numbers.Tail"))) >> dots)) 
       ]
     SubSection("Iterating array")
     VerticalStack
@@ -202,7 +202,7 @@ let slides (title : string) =
                        Code.For((AssignInline("index", (constInt(0)))),  
                                 (Code.Op(var "index", Operator.LessOrEquals, var "array_of_numbers.Length")), 
                                 (AssignInline ("index", Code.Op(var "index", Operator.Plus, constInt(1)))),
-                                dots) >> dots)) |> Unrepeated
+                                dots) >> dots)) 
       Pause
       ItemsBlock
         [
@@ -270,7 +270,7 @@ let slides (title : string) =
           ]
         CSharpCodeBlock(TextSize.Tiny,
                         (GenericInterfaceDef (["T"], "Iterator", [typedSig "GetNext" [] "IOption<T>"])) 
-                         >> endProgram) |> Unrepeated
+                         >> endProgram) 
         ItemsBlock
           [
             ! @"\texttt{GetNext} returns \texttt{Some<T>} if there is data to fetch"
@@ -317,7 +317,7 @@ let slides (title : string) =
                           typedDeclAndInit "current" "int" (constInt(-1)) |> makePrivate
                           typedDef "GetNext" [] "IOption<int>" (("current" := Code.Op(var "current", Operator.Plus, (ConstInt(1)))) >> 
                                                                 (Code.New("Some<int>",[var "current"]) |> ret))
-                          ])) |> Unrepeated          
+                          ]))           
       ]
     SubSection("List<T>")
     VerticalStack
@@ -347,7 +347,7 @@ let slides (title : string) =
                                                                         ((typedDeclAndInit "tmp" "List<int>" (var "list")) >>
                                                                          ("list" := (MethodCall("list", "GetTail", []))) >>                                                                         
                                                                          (Code.New("Some<int>",[MethodCall("tmp", "GetValue", [])]) |> ret))) >> endProgram)
-                          ])) |> Unrepeated          
+                          ]))           
       ]
     SubSection("Array<T>")
     VerticalStack
@@ -377,7 +377,7 @@ let slides (title : string) =
                                                                          (Code.New("None<T>",[]) |> ret),
                                                                          (("index" := Code.Op(var "index" ,Operator.Plus, ConstInt(1))) >> 
                                                                           (Code.New("Some<int>",[var "array[index]"]) |> ret)))) >> endProgram)
-                          ])) |> Unrepeated          
+                          ]))           
       ]
 
     SubSection("Other collections")
@@ -398,7 +398,7 @@ let slides (title : string) =
                         (GenericInterfaceDef (["T"], "TraditionalIterator", [typedSig "MoveNext" [] "void"
                                                                              typedSig "HasNext" [] "bool"
                                                                              typedSig "GetCurrent" [] "T"])) 
-                         >> endProgram) |> Unrepeated
+                         >> endProgram) 
         ItemsBlock
           [
             ! @"As we can see, this is less safe, since now we have to \textit{carefully} manipulate three methods (instead of one as for \texttt{Iterator<T>})"
@@ -421,7 +421,7 @@ let slides (title : string) =
                             typedDef "GetNext" [] "IOption<int>" (Code.If(MethodCallInline("iterator","HasNext",[]),
                                                                            ((MethodCall("iterator" , "MoveNext", [])) >>
                                                                             (Code.New("Some<int>",[MethodCall("iterator" , "GetCurrent", [])]) |> ret)),
-                                                                            (Code.New("None<T>",[]) |> ret)))])) |> Unrepeated
+                                                                            (Code.New("None<T>",[]) |> ret)))])) 
       ]
     
     Section("Conclusions")
