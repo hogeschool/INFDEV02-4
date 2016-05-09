@@ -146,7 +146,7 @@ let slides (title : string) =
         ! @"List of cars"
         ! @"Array of numbers"
         ! @"Array of Array of pixels (a matrix)"
-        ! @"Option (zero or one elements"
+        ! @"Option (zero or one elements)"
         ! @"etc.."
       ]
       
