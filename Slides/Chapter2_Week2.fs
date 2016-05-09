@@ -38,7 +38,7 @@ let slides (title : string) =
       [
         ItemsBlockWithTitle("Behavioral patterns")
           [
-            ! @"Are design patterns for identifying the fundamental communication behavior between entities"
+            ! @"Design patterns for identifying the fundamental communication behavior between entities"
             ! @"Among such patterns we find:"
           ]
         ItemsBlock
@@ -58,7 +58,7 @@ let slides (title : string) =
       [
         ItemsBlockWithTitle("Structural patterns")
           [
-            ! @"Are design patterns that ease the design of an application by identifying a simple way to implement relationships between entities"
+            ! @"Design patterns that ease the design of an application by identifying a simple way to implement relationships between entities"
             ! @"Among such patterns we find:"
           ]
         ItemsBlock
@@ -75,8 +75,8 @@ let slides (title : string) =
       [
         ItemsBlockWithTitle("Creational patterns")
           [
-            ! @"Are design patterns that deal with entities creation mechanisms, trying to create entities in a manner suitable to the situation"
-            ! @"They make it possible to have ``virtual'' constructors"
+            ! @"Design patterns that deal with entities creation mechanisms, trying to create entities in a manner suitable to the situation"
+            ! @"They make it possible to have ``polymorphic'' constructors"
             ! @"Among such patterns we find:"
           ]
         ItemsBlock
@@ -106,13 +106,14 @@ let slides (title : string) =
     ItemsBlock
       [
         ! @"Every piece of knowledge must have a single, unambiguous, authoritative representation within a system"
-        ! @"Violations of DRY are typically referred to as \textit{WET} solutions"
+        ! @"Violations of DRY are typically referred to as \textit{WET}(write everything twice) solutions"
       ]
     SubSection("KISS")
     ItemsBlock
       [
         ! @"It states that most systems work best if they are kept simple rather than made complicated"
         ! @"Simplicity should be a key goal in design and unnecessary complexity should be avoided"
+        ! @"See $\lambda$-calculus / stack & heap: complex system from single rules"
       ]
     SubSection("SOLID")
     ItemsBlock
@@ -135,7 +136,6 @@ let slides (title : string) =
         ! @"Today we are going to study collections"
         ! @"In particular, we are going to study how to access the elements of a collection without exposing its underlying representation (methods and fields)"
         ! @"How? By means of a design pattern: the iterator (a behavioral design pattern)"
-        ! @"We will see how the iterator provides a clean, almost trivial, general way representation for iterating collections"
       ]
 
     SubSection("Different implementations for different collections")
@@ -146,7 +146,7 @@ let slides (title : string) =
         ! @"List of cars"
         ! @"Array of numbers"
         ! @"Array of Array of pixels (a matrix)"
-        ! @"Option (an option essentially is a ``one-element` collection'')"
+        ! @"Option (zero or one elements"
         ! @"etc.."
       ]
       
@@ -154,7 +154,7 @@ let slides (title : string) =
     ItemsBlock
       [
         ! @"However, all collections, from options to arrays, exhibit similarities"
-        ! @"The \textit{general} idea is going through all its elements one by one until there are no more to see"
+        ! @"The \textit{general} idea is going through all the elements one by one until there are no more to see"
       ]
     ItemsBlock
       [
@@ -162,7 +162,7 @@ let slides (title : string) =
         ! @"This is an issue"
         ! @"Why?"
         Pause
-        ! @"\textbf{Because we would have to write specific code for each collection}"
+        ! @"\textbf{Because we would have to write specific access/iteration code for each collection}"
       ]
     SubSection("Similar collections, but with different implementation")
     ItemsBlock
@@ -181,7 +181,7 @@ let slides (title : string) =
           ! @"To move to the next node we need to manually update such variable, by assigning to it a reference to the next node"
         ]
       CSharpCodeBlock(TextSize.Tiny,
-                      (typedDeclAndInit "list_of_numbers" "LinkedList<int>" (Code.New("LinkedList<int>", [])) >>
+                      (genericTypedDeclAndInit ["int"] "list_of_numbers" "LinkedList" (Code.GenericNew("LinkedList", ["int"], [])) >>
                        dots >>
                        Code.While(Code.Op(var "list_of_numbers.Tail", Operator.NotEquals, Code.None),
                                   (dots >>
@@ -193,7 +193,7 @@ let slides (title : string) =
       ItemsBlockWithTitle ("Iterating array")
         [
           ! @"Iterating an array requires a variable (an index) containing a number representing the position of the current visited element"
-          ! @"To move to the next element we need to manually update the variable, increasing it by one"
+          ! @"To move to the next element we need to manually update the index, increasing it by one"
         ]
       CSharpCodeBlock(TextSize.Tiny,
                       (arrayDeclAndInit "array_of_numbers" "int" (Code.NewArray("int", 5))  >>
@@ -247,6 +247,7 @@ let slides (title : string) =
         ! @"We will now study it in detail and provide a series of examples"
 
       ]
+    Section("The iterator design pattern")
     VerticalStack
       [
         ItemsBlockWithTitle("The iterator design pattern")
@@ -255,12 +256,11 @@ let slides (title : string) =
           ]
         ItemsBlock
           [
-            ! @"get current data"
+            ! @"get current item"
             ! @"move to next item"
             ! @"check if next item exists"
           ]
       ]
-    Section("The iterator design pattern")
     SubSection("The iterator design pattern")
     VerticalStack
       [
@@ -273,7 +273,7 @@ let slides (title : string) =
                          >> endProgram) 
         ItemsBlock
           [
-            ! @"\texttt{GetNext} returns \texttt{Some<T>} if there is data to fetch"
+            ! @"\texttt{GetNext} returns \texttt{Some<T>} if there is an item to fetch"
             ! @"It moves to the next item"
             ! @"It returns \texttt{None<T>} if there are no more elements to fetch"
           ]
@@ -313,10 +313,10 @@ let slides (title : string) =
         CSharpCodeBlock( TextSize.Tiny,
                         (classDef "NaturalList" 
                           [
-                          implements "Iterator<int>"
-                          typedDeclAndInit "current" "int" (constInt(-1)) |> makePrivate
-                          typedDef "GetNext" [] "IOption<int>" (("current" := Code.Op(var "current", Operator.Plus, (ConstInt(1)))) >> 
-                                                                (Code.New("Some<int>",[var "current"]) |> ret))
+                          implements "Iterator<Integer>"
+                          typedDeclAndInit "current" "Integer" (constInt(-1)) |> makePrivate
+                          typedDef "GetNext" [] "IOption<Integer>" (("current" := Code.Op(var "current", Operator.Plus, (ConstInt(1)))) >> 
+                                                                    (Code.New("Some<Integer>",[var "current"]) |> ret))
                           ]))           
       ]
     SubSection("List<T>")
@@ -326,6 +326,7 @@ let slides (title : string) =
           [
             ! @"Dealing with a list requires to deal with references"
             ! @"We hide such complexity, which is error-prone, by means of our iterator"
+            ! @"We use the unsafe version of the list with \texttt{IsNone}, \texttt{GetValue}, and \texttt{GetTail} for simplicity; a visit would be better "
           ]
       ]
     VerticalStack
@@ -334,6 +335,7 @@ let slides (title : string) =
           [
             ! @"Our list now takes as input an object of type list"
             ! @"\texttt{GetNext} returns \texttt{None} at the end of the list (when the tail is \texttt{None}), otherwise it moves to the next node and returns its value wrapped inside a \texttt{Some}"
+
           ]
         CSharpCodeBlock( TextSize.Tiny,
                         (genericClassDef ["T"]
@@ -342,11 +344,11 @@ let slides (title : string) =
                           implements "Iterator<T>"
                           typedDecl "list" "List<T>" |> makePrivate
                           typedDef "List" ["List<T>","list"] "" (("this.list" := var"list") >> endProgram) |> makePublic
-                          typedDef "GetNext" [] "IOption<int>" (Code.If(Code.MethodCallInline("list","IsNone", []),
+                          typedDef "GetNext" [] "IOption<T>" (Code.If(Code.MethodCallInline("list","IsNone", []),
                                                                         (Code.New("None<T>",[]) |> ret),
-                                                                        ((typedDeclAndInit "tmp" "List<int>" (var "list")) >>
+                                                                        ((typedDeclAndInit "tmp" "List<T>" (var "list")) >>
                                                                          ("list" := (MethodCall("list", "GetTail", []))) >>                                                                         
-                                                                         (Code.New("Some<int>",[MethodCall("tmp", "GetValue", [])]) |> ret))) >> endProgram)
+                                                                         (Code.New("Some<T>",[MethodCall("tmp", "GetValue", [])]) |> ret))) >> endProgram)
                           ]))           
       ]
     SubSection("Array<T>")
@@ -373,18 +375,18 @@ let slides (title : string) =
                           typedDecl "array" "T[]" |> makePrivate
                           typedDeclAndInit "index" "int" (constInt(-1)) |> makePrivate
                           typedDef "Array" ["T[]","array"] "" (("this.array" := var"array") >> endProgram) |> makePublic
-                          typedDef "GetNext" [] "IOption<int>" (Code.If((Code.Op((Code.Op(var "index" ,Operator.Plus, ConstInt(1) ),Operator.LessThan, var "array.Length")),
+                          typedDef "GetNext" [] "IOption<T>" (Code.If((Code.Op((Code.Op(var "index" ,Operator.Plus, ConstInt(1) ),Operator.LessThan, var "array.Length")),
                                                                          (Code.New("None<T>",[]) |> ret),
                                                                          (("index" := Code.Op(var "index" ,Operator.Plus, ConstInt(1))) >> 
-                                                                          (Code.New("Some<int>",[var "array[index]"]) |> ret)))) >> endProgram)
+                                                                          (Code.New("Some<T>",[var "array[index]"]) |> ret)))) >> endProgram)
                           ]))           
       ]
 
     SubSection("Other collections")
     ItemsBlock
       [
-        ! @"Each container ill then store its own reference to a collection, plus the current iterated element"
-        ! @"The plumbing is quite obvious per container"
+        ! @"Each container will then store its own reference to a collection, plus the current iterated element"
+        ! @"The plumbing is trivial per container"
         ! @"We obviously cannot show them all"
       ]
     SubSection("The iterator in literature")
@@ -418,9 +420,9 @@ let slides (title : string) =
                             implements "Iterator<T>"
                             typedDecl "iterator" "TraditionalIterator<T>" |> makePrivate
                             typedDef "MakeSafe" ["TraditionalIterator<T>","iterator"] "" (("this.iterator" := var"iterator") >> endProgram) |> makePublic
-                            typedDef "GetNext" [] "IOption<int>" (Code.If(MethodCallInline("iterator","HasNext",[]),
+                            typedDef "GetNext" [] "IOption<T>" (Code.If(MethodCallInline("iterator","HasNext",[]),
                                                                            ((MethodCall("iterator" , "MoveNext", [])) >>
-                                                                            (Code.New("Some<int>",[MethodCall("iterator" , "GetCurrent", [])]) |> ret)),
+                                                                            (Code.New("Some<T>",[MethodCall("iterator" , "GetCurrent", [])]) |> ret)),
                                                                             (Code.New("None<T>",[]) |> ret)))])) 
       ]
     
