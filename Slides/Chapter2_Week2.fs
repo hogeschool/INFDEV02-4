@@ -92,7 +92,7 @@ let slides (title : string) =
       [
         ! @"Even more abstractly, design patterns are all rooted in the same principles"
         ! @"These principles make it possible to derive old and new patterns"
-        ! @"THey are refinements of the broader principles of encapsulation and loose coupling"
+        ! @"They are refinements of the broader principles of encapsulation and loose coupling"
       ]
     SubSection("Software development principles")
     ItemsBlock
