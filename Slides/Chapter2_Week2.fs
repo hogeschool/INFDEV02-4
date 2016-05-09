@@ -163,6 +163,8 @@ let slides (title : string) =
         ! @"Why?"
         Pause
         ! @"\textbf{Because we would have to write specific access/iteration code for each collection}"
+        Pause
+        ! @"\textbf{For example: how hard would it have been to change all custom lists into Python standard lists in DEV2?}"
       ]
     SubSection("Similar collections, but with different implementation")
     ItemsBlock
