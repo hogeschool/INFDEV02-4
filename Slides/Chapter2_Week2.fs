@@ -281,7 +281,7 @@ let slides (title : string) =
     SubSection("Implementing the Iterator<T>")
     ItemsBlock
       [
-        ! @"At this point every collection that wants to provide a disciplined and controlled iteration mechanism has to implement such interface"
+        ! @"At this point every collection that wants to provide a disciplined and controlled iteration mechanism has to either implements such interface or provide a way to adapt to it"
         ! @"Iterating a collection with 5, 3, 2 will return: Some(5), Some(3), Some(2), None(), None(), None(), ...., None()"
       ]
     UML
@@ -313,16 +313,16 @@ let slides (title : string) =
         CSharpCodeBlock( TextSize.Tiny,
                         (classDef "NaturalList" 
                           [
-                          implements "Iterator<Integer>"
-                          typedDeclAndInit "current" "Integer" (constInt(-1)) |> makePrivate
-                          typedDef "GetNext" [] "IOption<Integer>" (("current" := Code.Op(var "current", Operator.Plus, (ConstInt(1)))) >> 
-                                                                    (Code.New("Some<Integer>",[var "current"]) |> ret))
-                          ]))           
+                          implements "Iterator<int>"
+                          typedDeclAndInit "current" "int" (constInt(-1)) |> makePrivate
+                          typedDef "GetNext" [] "IOption<int>" (("current" := Code.Op(var "current", Operator.Plus, (ConstInt(1)))) >> 
+                                                                    (Code.New("Some<int>",[var "current"]) |> ret))
+                          ])) |> Unrepeated      
       ]
-    SubSection("List<T>")
+    SubSection("IterableList<T>")
     VerticalStack
       [
-        ItemsBlockWithTitle("List<T>")
+        ItemsBlockWithTitle("IterableList<T>")
           [
             ! @"Dealing with a list requires to deal with references"
             ! @"We hide such complexity, which is error-prone, by means of our iterator"
@@ -331,19 +331,19 @@ let slides (title : string) =
       ]
     VerticalStack
       [
-        ItemsBlockWithTitle("List<T>")
+        ItemsBlockWithTitle("IterableList<T>")
           [
-            ! @"Our list now takes as input an object of type list"
+            ! @"Our iterable list now takes as input an object of type list"
             ! @"\texttt{GetNext} returns \texttt{None} at the end of the list (when the tail is \texttt{None}), otherwise it moves to the next node and returns its value wrapped inside a \texttt{Some}"
 
           ]
         CSharpCodeBlock( TextSize.Tiny,
                         (genericClassDef ["T"]
-                          "List" 
+                          "IterableList" 
                           [
                           implements "Iterator<T>"
                           typedDecl "list" "List<T>" |> makePrivate
-                          typedDef "List" ["List<T>","list"] "" (("this.list" := var"list") >> endProgram) |> makePublic
+                          typedDef "IterableList" ["List<T>","list"] "" (("this.list" := var"list") >> endProgram) |> makePublic
                           typedDef "GetNext" [] "IOption<T>" (Code.If(Code.MethodCallInline("list","IsNone", []),
                                                                         (Code.New("None<T>",[]) |> ret),
                                                                         ((typedDeclAndInit "tmp" "List<T>" (var "list")) >>
@@ -351,10 +351,10 @@ let slides (title : string) =
                                                                          (Code.New("Some<T>",[MethodCall("tmp", "GetValue", [])]) |> ret))) >> endProgram)
                           ]))           
       ]
-    SubSection("Array<T>")
+    SubSection("IterableArray<T>")
     VerticalStack
       [
-        ItemsBlockWithTitle("Array<T>")
+        ItemsBlockWithTitle("IterableArray<T>")
           [
             ! @"Dealing with an array requires to deal with its indexes"
             ! @"We hide such complexity, which is error-prone, by means of our iterator"
@@ -362,24 +362,24 @@ let slides (title : string) =
       ]
     VerticalStack
       [
-        ItemsBlockWithTitle("Array<T>")
+        ItemsBlockWithTitle("IterableArray<T>")
           [
-            ! @"Our ``new'' array takes as input an object of type array"
+            ! @"Our iterable array takes as input an object of type array"
             ! @"\texttt{GetNext} returns \texttt{None} at the end of the array, otherwise it increases the index and returns the value of the array at position \texttt{index} wrapped inside a \texttt{Some}"
           ]
         CSharpCodeBlock( TextSize.Tiny,
                         (genericClassDef ["T"]
-                          "Array" 
+                          "IterableArray" 
                           [
                           implements "Iterator<T>"
                           typedDecl "array" "T[]" |> makePrivate
                           typedDeclAndInit "index" "int" (constInt(-1)) |> makePrivate
-                          typedDef "Array" ["T[]","array"] "" (("this.array" := var"array") >> endProgram) |> makePublic
-                          typedDef "GetNext" [] "IOption<T>" (Code.If((Code.Op((Code.Op(var "index" ,Operator.Plus, ConstInt(1) ),Operator.LessThan, var "array.Length")),
+                          typedDef "IterableArray" ["T[]","array"] "" (("this.array" := var"array") >> endProgram) |> makePublic
+                          typedDef "GetNext" [] "IOption<T>" (Code.If((Code.Op((Code.Op(var "index" ,Operator.Plus, ConstInt(1) ),Operator.GreaterOrEquals, var "array.Length")),
                                                                          (Code.New("None<T>",[]) |> ret),
                                                                          (("index" := Code.Op(var "index" ,Operator.Plus, ConstInt(1))) >> 
                                                                           (Code.New("Some<T>",[var "array[index]"]) |> ret)))) >> endProgram)
-                          ]))           
+                          ])) |> Unrepeated
       ]
 
     SubSection("Other collections")
