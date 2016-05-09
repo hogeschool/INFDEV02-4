@@ -106,7 +106,7 @@ let slides (title : string) =
     ItemsBlock
       [
         ! @"Every piece of knowledge must have a single, unambiguous, authoritative representation within a system"
-        ! @"Violations of DRY are typically referred to as \textit{WET}(write everything twice) solutions"
+        ! @"Violations of DRY are typically referred to as \textit{WET}\footnote{write everything twice, we enjoy typing, waste everyone's time, ...}"
       ]
     SubSection("KISS")
     ItemsBlock
