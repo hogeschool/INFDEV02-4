@@ -1,5 +1,5 @@
 \section*{Structure of exam \modulecode}
-The general shape of a theoretical exam for \texttt{DEV 3} is made up of only two, highly structured open questions.
+The general shape of a theoretical exam for \texttt{\modulecode} is made up of highly structured open questions.
 
 \paragraph{Question 1: } \ \\
 
@@ -35,10 +35,6 @@ Option<int> number = new Some<int>(5);
 int inc_number = number.Visit(() => { throw new Exception("Expecting a value..."); }, i => i + 1);
 Console.WriteLine(inc_number);
 \end{lstlisting}
-
-\textbf{Concrete example of answer:}
-...
-
 \textbf{Points:} \textit{3 (30\% of total).}
 
 \textbf{Grading:} \textit{one point per correctly filled-in execution step.}
@@ -81,58 +77,22 @@ int inc_number = number.Visit(() => { throw new Exception("Expecting a value..."
 Console.WriteLine(inc_number);
 \end{lstlisting}
 
-\textbf{Concrete example of answer:} \textit{}
-...
-
-\textbf{Points:} \textit{4 (30\% of total).}
+\textbf{Points:} \textit{3 (30\% of total).}
 
 \textbf{Grading:} \textit{Grading: one point per correctly filled-in type checking step.}
 
 \textbf{Associated learning objective:} \glsfirst{type}
 
-\paragraph{Question 3: } \ \\
+\paragraph{Question 3: }
 
-\textbf{General shape of question:} \textit{Given the following implementation of a design pattern fill in the missing blocks of code.}
+\textbf{General shape of question:} \textit{Given the following UML diagram of a design pattern, fill in the missing parts.}
 
 \textbf{Concrete example of question:} 
 
-\begin{tikzpicture}
-\node[draw] (PersonLocation Graph) {
-	\begin{minipage}{.85\linewidth}
-\lstset{numbers=left,basicstyle=\ttfamily\small}\lstset{language=[Sharp]C}
-\begin{lstlisting}[escapechar=!, frame=false]
-public interface Option<T>
-{
-! \textbf{\textit{BLOCK 1}}:!
-! \tikz \draw (0,0) -- (13,0) -- (13,1.5) -- (0,1.5) -- (0,0);!  
-}
-! \textbf{\textit{BLOCK 2}}:!
-! \tikz \draw (0,0) -- (13,0) -- (13,1.5) -- (0,1.5) -- (0,0);!
-{
-  T value;
-! \textbf{\textit{BLOCK 3}}:!
-! \tikz \draw (0,0) -- (13,0) -- (13,1.5) -- (0,1.5) -- (0,0);!
-  public U Visit<U>(Func<U> onNone, Func<T, U> onSome)
-  {
-    return onSome(value);
-  }
-}
-public class None<T> : Option<T>
-{
-! \textbf{\textit{BLOCK 4}}:!
-! \tikz \draw (0,0) -- (13,0) -- (13,1.5) -- (0,1.5) -- (0,0);!
+\begin{center}
+\includegraphics[width=\textwidth / 2]{decorator_uml}
+\end{center}
 
-}
-...
-Option<int> number = new Some<int>(5);
-int inc_number = number.Visit(() => { throw new Exception("Expecting a value..."); }, i => i + 1);
-Console.WriteLine(inc_number);
-\end{lstlisting}
-\end{minipage}
-
-};
-\end{tikzpicture}
-\\
 \textbf{Points:} \textit{4 (40\% of total).}
 
 \textbf{Grading:} \textit{Grading: one point per correctly filled-in block of code.}
