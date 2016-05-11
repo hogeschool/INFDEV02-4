@@ -6,14 +6,14 @@ import java.util.List;
 public class Application {
 
     public static void main(String[] args) {
-//        runNaturalNumbers();
-//        runInfiniteLoop();
+        runNaturalNumbers();
+        runInfiniteLoop();
         runMapIterator();
     }
 
     private static void runMapIterator() {
         List<Integer> list = Arrays.asList(0, 1, 2, 3);
-        Map<Integer, Integer> map = new Map<Integer, Integer>(new InfiniteLoopListIterator(list), i -> i + 2);
+        Map<Integer, Integer> map = new Map<>(new InfiniteLoopListIterator<>(list), i -> i + 2);
 
         int i = 0;
         while (!map.isDone() && i < 10) {
@@ -25,7 +25,7 @@ public class Application {
     }
 
     private static void runInfiniteLoop() {
-        InfiniteLoopListIterator illi = new InfiniteLoopListIterator(Arrays.asList(0, 1, 2, 3));
+        InfiniteLoopListIterator illi = new InfiniteLoopListIterator<>(Arrays.asList(0, 1, 2, 3));
 
         int i = 0;
         while (!illi.isDone() && i < 10) {

@@ -7,11 +7,11 @@ import iterator1.unsafeCollections.NaturalList;
 
 class Program {
 
-    static void main(String[] args) throws InterruptedException {
-        Iterator<Integer> list = new UnsafeIteratorAdapter<Integer>(new iterator1.unsafeCollections.NaturalList());
+    public static void main(String[] args) throws InterruptedException {
+        Iterator<Integer> list = new UnsafeIteratorAdapter<>(new iterator1.unsafeCollections.NaturalList());
 
         IUnsafeIterator<Integer> elems = new NaturalList();
-        Map<Integer, String> mapped_elems = new Map<Integer, String>(elems, x -> x.toString() + " is a string now..");
+        Map<Integer, String> mapped_elems = new Map<>(elems, x -> x.toString() + " is a string now..");
         mapped_elems.moveNext();
         while (true) {
             System.out.println(mapped_elems.getCurrent());

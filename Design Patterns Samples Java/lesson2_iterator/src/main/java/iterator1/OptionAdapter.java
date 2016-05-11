@@ -1,17 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package iterator1;
 
-import iterator1.safeCollections.Iterator;
 
+import iterator1.safeCollections.Iterator;
 import visitor.optionLambda.IOption;
 import visitor.optionLambda.None;
 import visitor.optionLambda.Some;
 
-  public class OptionAdapter<T> implements Iterator<T>
+public class OptionAdapter<T> implements Iterator<T>
   {
     private IOption<T> option;
     private boolean visited = false;

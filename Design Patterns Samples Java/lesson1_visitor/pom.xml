@@ -3,12 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.hr.cmi.infdev4</groupId>
     <artifactId>lesson1_visitor</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-    <name>lesson1_visitor</name>
+
+    <parent>
+        <groupId>nl.hr.cmi.infdev4</groupId>
+        <artifactId>INFDEV02-4</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
 </project>

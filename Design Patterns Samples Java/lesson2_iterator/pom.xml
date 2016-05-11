@@ -3,19 +3,20 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.hr.cmi.infdev4</groupId>
     <artifactId>lesson2_iterator</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
     <name>lesson2_iterator</name>
+
+    <parent>
+        <groupId>nl.hr.cmi.infdev4</groupId>
+        <artifactId>INFDEV02-4</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>nl.hr.cmi.infdev4</groupId>
             <artifactId>lesson1_visitor</artifactId>
-            <version>${project.version}</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
