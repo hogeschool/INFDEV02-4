@@ -6,29 +6,29 @@ using System.Threading.Tasks;
 
 namespace OptionNoLambda
 {
-  interface IOptionVisitor<T, U>
+  interface OptionVisitor<T, U>
   {
     U onSome(T value);
     U onNone();
   }
-  interface Option<T> { U Visit<U>(IOptionVisitor<T, U> visitor); }
+  interface Option<T> { U Visit<U>(OptionVisitor<T, U> visitor); }
   class Some<T> : Option<T>
   {
     public T value;
     public Some(T value) { this.value = value; }
-    public U Visit<U>(IOptionVisitor<T, U> visitor)
+    public U Visit<U>(OptionVisitor<T, U> visitor)
     {
       return visitor.onSome(this.value);
     }
   }
   class None<T> : Option<T>
   {
-    public U Visit<U>(IOptionVisitor<T, U> visitor)
+    public U Visit<U>(OptionVisitor<T, U> visitor)
     {
       return visitor.onNone();
     }
   }
-  class PrettyPrinterIOptionVisitor<T> : IOptionVisitor<T, string>
+  class PrettyPrinterIOptionVisitor<T> : OptionVisitor<T, string>
   {
     public string onNone()
     {
@@ -40,7 +40,7 @@ namespace OptionNoLambda
       return value.ToString();
     }
   }
-  class PrettyPrinterIntIOptionVisitor : IOptionVisitor<int, string>
+  class PrettyPrinterIntIOptionVisitor : OptionVisitor<int, string>
   {
     public string onNone()
     {
@@ -52,7 +52,7 @@ namespace OptionNoLambda
       return value.ToString();
     }
   }
-  class LambdaIOptionVisitor<T, U> : IOptionVisitor<T, U>
+  class LambdaIOptionVisitor<T, U> : OptionVisitor<T, U>
   {
     Func<T, U> _onSome;
     Func<U> _onNone;
@@ -74,11 +74,11 @@ namespace OptionNoLambda
 }
 namespace OptionLambda
 {
-  public interface IOption<T>
+  public interface Option<T>
   {
     U Visit<U>(Func<U> onNone, Func<T, U> onSome);
   }
-  public class Some<T> : IOption<T>
+  public class Some<T> : Option<T>
   {
     T value;
     public Some(T value) { this.value = value; }
@@ -87,7 +87,7 @@ namespace OptionLambda
       return onSome(value);
     }
   }
-  public class None<T> : IOption<T>
+  public class None<T> : Option<T>
   {
     public U Visit<U>(Func<U> onNone, Func<T, U> onSome)
     {
