@@ -349,8 +349,8 @@ let slides (title : string) =
                           [
                             implements "Iterator<T>"
                             genericTypedDecl ["T"] "option" "Option" |> makePrivate
-                            typedDeclAndInit "visited" "bool" (constBool(false)) |> makePrivate
-                            typedDef "IOptionIterator" ["Option<T>","option"] "" (("this.option" := var"option") >> endProgram) |> makePublic
+                            typedDecl "visited" "bool"|> makePrivate
+                            typedDef "IOptionIterator" ["Option<T>","option"] "" (("this.option" := var"option" >> "this.visited" := (constBool(false)) >> endProgram) |> makePublic
                             typedDef "GetNext" [] "Option<T>" (Code.If(var ("visited"),
                                                                            (Code.New("None<T>",[]) |> ret),
                                                                            (("visited" := ConstBool(true)) >>
@@ -368,14 +368,31 @@ let slides (title : string) =
     ItemsBlock
       [
         ! @"Consider the \texttt{TraditionalIterator} and \texttt{Iterator} example"
-        ! @"We can adapt in both directions!"            
       ]
 
-    // Repeat the interfaces TraditionalIterator and Iterator
-    // What was the point of one and the other?
-    // We need both, as they both make sense within their respective contexts!
-    // How do we bridge the two worlds? With an adapter per direction!
-          
+    
+    SubSection("TraditionalIterator and Iterator")
+    VerticalStack
+      [
+        ItemsBlockWithTitle("TraditionalIterator and Iterator")
+          [
+            ! @"What was the point of one and the other?"
+            ! @"We need both, as they both make sense within their respective contexts!"     
+          ]
+        CSharpCodeBlock(TextSize.Tiny,
+                        (GenericInterfaceDef (["T"], "TraditionalIterator", [typedSig "MoveNext" [] "void"
+                                                                             typedSig "HasNext" [] "bool"
+                                                                             typedSig "GetCurrent" [] "T"])) >>
+                        (GenericInterfaceDef (["T"], "Iterator", [typedSig "GetNext" [] "IOption<T>"])) >> endProgram)
+      ]     
+    SubSection("Bridging TraditionalIterator and Iterator")
+    ItemsBlock
+      [
+        ! @"How do we bridge the two worlds?"
+        ! @"With an adapter per direction:"                       
+        ! @"\texttt{MakeSafe} that makes \texttt{TraditionalIterator} behave as \texttt{Iterator}"
+        ! @"\texttt{MakeUnsafe} that makes \texttt{Iterator} behave as \texttt{TraditionalIterator}"
+      ]
     CSharpCodeBlock(TextSize.Tiny,
                     (genericClassDef ["T"]
                       "MakeSafe" 
@@ -400,7 +417,7 @@ let slides (title : string) =
                                                                         (("_current" := (MethodCall("iterator", "GetValue", []))) >>
                                                                          (constBool(true)  |> ret)),
                                                                         (constBool(false)  |> ret)))
-                      ])) |> Unrepeated
+                      ]))
     ItemsBlock [
       ! @"What is the behavior of \texttt{new MakeSafe(new MakeUnsafe(it))} for a generic iterator it?"
       Pause

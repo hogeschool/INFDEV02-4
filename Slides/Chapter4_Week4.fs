@@ -28,7 +28,7 @@ let slides (title : string) =
         ! @"This leads to conditionals in client code to determine which concrete class to instantiate"
         ItemsBlock
           [
-            ! @"\texttt{switch classToInstantiate ...}"
+            ! @"\texttt{switch (classToInstantiate) { ... }}"
             ! @"Hard to read"
             ! @"Repeated\footnote{Error prone, hard to modify and maintain.} wherever instantiation happens"
           ]
@@ -36,7 +36,7 @@ let slides (title : string) =
 
     ItemsBlock
       [
-        ! @"In particular, we will study the factory design pattern (a creational pattern)"
+        ! @"In particular, we will study the \textbf{factory design pattern} (a creational pattern)"
         ! @"This moves the construction logic to a new class, thereby simulating virtual constructors"
         ! @"This design pattern is going to be the topic of this lecture"
       ]
@@ -85,7 +85,6 @@ let slides (title : string) =
         CSharpCodeBlock(TextSize.Tiny,
                         (typedDeclAndInit "animals" "LinkedList<Animal>" (Code.New("LinkedList<Animal>", [])) >>
                          typedDeclAndInit "input" "int" (constInt -1) >>
-                         //Code.MethodCall("animals","Add", [newC "LegacyLine" []]) >>
                          Code.While(Code.Op(var "input", Operator.NotEquals, constInt 0),
                                     ("input" := StaticMethodCall("Int32", "Parse", [(StaticMethodCall("Console", "ReadLine", []))])) >>
                                     (Code.IfThen(Code.Op(var "input", Operator.NotEquals, constInt 1),
