@@ -7,7 +7,6 @@ open Interpreter
 open Runtime
 
 
-// GENERAL IDEA
 let slides (title : string) = 
   [
     Section(sprintf "%s" title)
@@ -15,20 +14,38 @@ let slides (title : string) =
     SubSection("Lecture topics")
     ItemsBlock
       [
-        ! @"..."
+        ! @"The necessity for constructors at interface level"
+        ! @"The factory design pattern"
+        ! @"Abstract factory"
+        ! @"Conclusions"
       ]
     Section("The factory design pattern")
     SubSection("Introduction")
     ItemsBlock
       [
-        ! @"Instantiating derived types sometimes requires complex instantiation mechanisms not appropriate (or even not possible) to include their constructors, since this may lead to significant code duplication or the need for not accessible information"
-        ! @"The factory design pattern (a creational pattern) tackles such limitations by promoting virtual constructors that are able express the general shape of such mechanisms and leave concrete details to the concrete classes"
+        ! @"Sometimes, we know which interface to instantiate, but not its concrete class"
+        ! @"Interfaces specify no constructors, external code is necessary to express such mechanism"
+        ! @"This leads to conditionals in client code to determine which concrete class to instantiate"
+        ItemsBlock
+          [
+            ! @"\texttt{switch classToInstantiate ...}"
+            ! @"Hard to read"
+            ! @"Repeated\footnote{Error prone, hard to modify and maintain.} wherever instantiation happens"
+          ]
+      ]
+
+    ItemsBlock
+      [
+        ! @"In particular, we will study the factory design pattern (a creational pattern)"
+        ! @"This moves the construction logic to a new class, thereby simulating virtual constructors"
         ! @"This design pattern is going to be the topic of this lecture"
       ]
+
     SubSection "Motivations"
     ItemsBlock
       [
-        ! @"Sometimes we might have some logic that is tightly related to the creation of concrete classes that share some common type"
+        ! @"We wish to standardize our application that works across different domains, so to provide a unique way for instantiating their entities"
+        ! @"Every entity may have a logic that is not shared with others, but they all share a common type"
       ]
     SubSection "Our first example"
     VerticalStack
