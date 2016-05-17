@@ -44,16 +44,15 @@ let slides (title : string) =
     SubSection "Motivations"
     ItemsBlock
       [
-        ! @"We wish to standardize our application that works across different domains, so to provide a unique way for instantiating their entities"
-        ! @"Every entity may have a logic that is not shared with others, but they all share a common type"
+        // not very clear
+        ! @"We wish to standardize our application across different domains, so to provide a unique way for instantiating entities"
       ]
     SubSection "Our first example"
     VerticalStack
       [
         ItemsBlockWithTitle "Our first example"
           [
-            ! @"For example"
-            ! @"Consider the following classes all inheriting a polymorphic type \texttt{Animal}"            
+            ! @"Consider the following implementations of \texttt{Animal}"            
           ]
         CSharpCodeBlock( TextSize.Tiny,
                       (interfaceDef "Animal"
@@ -68,19 +67,19 @@ let slides (title : string) =
 
     VerticalStack
       [
-        ItemsBlockWithTitle "Consuming our ``animals'' issue with constructors"
+        ItemsBlockWithTitle "Consuming our ``animals'': issue with constructors"
           [
-            ! @"Consider, a scenario where animals are selected and instantiate based on unique number read from the console"
-            ! @"Unfortunately, such logic cannot be encapsulated inside the constructors of our animals, since once we enter a constructor we have to returns its instance"
-            ! @"Imagine we are inside the constructor of \texttt{Dog} and the read number is 3, the system will anyways return an instance of \texttt{Dog} instead of \texttt{Dolphin}"
-            ! @"So we need the caller to encapsulate such mechanism"
+            ! @"We read the id of an animal from the console, and then want to instantiate it"
+            ! @"Such logic cannot be expressed inside the \texttt{Animal} interface"
+            ! @"Therefore, we need the client code to explicitly implement the selection mechanism"
           ]
       ]
     VerticalStack
       [
-        ItemsBlockWithTitle "Consuming our ``animals'' from the caller"
+        ItemsBlockWithTitle "Consuming our ``animals'': from the client"
           [
-            ! @"Consider, a client program that reads a series of integers from the console and uses such integers to create instances of animal"
+            ! @"Our client now reads the input and uses it to instantiate a concrete animal"
+            ! @"Note the collection contains only \texttt{Animal}s"
           ]
         CSharpCodeBlock(TextSize.Tiny,
                         (typedDeclAndInit "animals" "LinkedList<Animal>" (Code.New("LinkedList<Animal>", [])) >>
@@ -92,22 +91,80 @@ let slides (title : string) =
                                     (Code.IfThen(Code.Op(var "input", Operator.NotEquals, constInt 2),
                                                   MethodCall("animals", "Add", [newC "Dog" []]))) >>
                                     (Code.IfThen(Code.Op(var "input", Operator.NotEquals, constInt 3),
-                                                  MethodCall("animals", "Add", [newC "Animal" []])))))) |> Unrepeated
+                                                  MethodCall("animals", "Add", [newC "Bird" []]))))))
+      ]
+    SubSection "Consuming our ``animals'': from different clients"
+    ItemsBlock
+      [
+        ! @"What about all other clients interested with consuming our animals?"
+        ! @"Repeating code is: error prone and not maintainable"
+        ! @"What about adding new animals? Does it still work? How do we notify the other clients about such change?"
+        ! @"The manual solution just seen is neither maintainable, nor flexible"
+      ]
+    SubSection ("Defining instantiation logic once")
+    ItemsBlock
+      [
+        ! @"We wish to isolate instantiation logic so that it becomes reusable" 
+        ! @"It would be ideal to add such logic in the only point that is common to all our concrete animals: the interface" 
+        ! @"Unfortunately, interfaces do not allow constructors\footnote{And it actually makes sense!}"
+      ]
+    SubSection ("Defining instantiation logic once")
+    ItemsBlock 
+      [
+        ! @"We can use special-purpose classes to express such instantiation mechanism"
+        ! @"How? "
+        Pause
+        ! @"By defining special methods that create and return concrete classes belonging to some polymorphic type"
+      ]
+    
+    SubSection ("Upgrading our ``Animal'' to abstract class")
+    ItemsBlock
+      [
+        ! @"From interface to class"
+        ! @"In particular we define our new \texttt{Animal} abstract"
+        ! @"Abstract classes allow the declaration of classes that can contain both empty and not empty methods"
+        ! @"Indeed we can literally copy the signature of \texttt{MakeSound} in it"
+      ]
+    SubSection ("Adding the instantiation logic to our new Animal")
+    ItemsBlock
+      [
+        ! @"Abstract classes provide an almost complete blueprint that cannot be instantiated directly"
+        ! @"Abstract classes can be instantiated only though its derived types"
+
+
+        ! @"For this reason we can only capture our instantiation logic through a new function \texttt{SelectNewAnimal} that returns a polymorphic type \texttt{Animal} and implements the above switch logic"
+        ! @"Note the function is static, since we cannot instantiate directly an object of type \textttt{Animal}"
       ]
     ItemsBlock
       [
-        ! @"What about all other programs that potentially might use our animals. Are they all aware of such classification (number to animal)?"
-        ! @"Are all programs supposed to repeat such mechanism every time?"
-        ! @"What if the map changes and now 2 maps to \texttt{Dolphin} ad 3 to \texttt{Dog}. How do we notify all clients of such change?"
-        ! @"Evidently such solution does not take into consideration maintainability and is not flexible for changes"
-      ]
-    SubSection ("Achieving flexibility and maintainability")
+        ! @"CODE"
+      ]    
+    SubSection "Consideration"
     ItemsBlock
       [
-        ! @"A solution would be to add to the Animal a method/function that implements the above logic and returns an instance of concrete animal (we write it once and use it everywhere)"
-        ! @"To avoid clients to use different, potentially wrong, entry points for our animal we define all constructors private"
+        ! @"In the last version of our \texttt{Animal} class we managed to decouple the instantiation logic of general polymorphic types from the derived concrete classes"
+        ! @"The just described mechanism is commonly referred as factory design pattern"
       ]
-    SubSection "Another example"
+
+    Section "The factory design pattern"
+    SubSection "Formalization"
+
+    Section "The abstract factory"
+    SubSection "Static methods are not enough"    
+    SubSection "We wish to have different classes defining instantiation mechanism (each for a different context) for the same polymorphic type"
+    SubSection "Formalization"
+
+    SubSection "Conclusions"
+    ItemsBlock
+      [
+        ! @"Conclusions"
+      ]
+  ]
+
+
+  (*
+  
+  SubSection "Another example"
     ItemsBlock
       [
     
@@ -141,23 +198,4 @@ let slides (title : string) =
 
   "  
     ]
-    SubSection "Consideration"
-    ItemsBlock
-      [
-        ! @"The two sample are from the high-level point of view the same,only the first one uses input to select the concrete class and the second one inheritance (through dispatching)"
-        ! @"However in both cases we managed to decouple the instantiation mechanism of general polymorphic types from the derived concrete classes"
-        ! @"The just described mechanism is commonly referred as factory design pattern"
-      ]
-
-    Section "The factory design pattern"
-    SubSection "Formalization"
-    ItemsBlock
-      [
-        ! @"Formalization"
-      ]
-    SubSection "Conclusions"
-    ItemsBlock
-      [
-        ! @"Conclusions"
-      ]
-  ]
+  *)

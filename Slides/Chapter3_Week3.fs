@@ -350,13 +350,14 @@ let slides (title : string) =
                             implements "Iterator<T>"
                             genericTypedDecl ["T"] "option" "Option" |> makePrivate
                             typedDecl "visited" "bool"|> makePrivate
-                            typedDef "IOptionIterator" ["Option<T>","option"] "" (("this.option" := var"option" >> "this.visited" := (constBool(false)) >> endProgram) |> makePublic
+                            typedDef "IOptionIterator" ["Option<T>","option"] "" ((("this.option" := var"option") >> ("this.visited" := (constBool(false))) >> endProgram)) |> makePublic
                             typedDef "GetNext" [] "Option<T>" (Code.If(var ("visited"),
                                                                            (Code.New("None<T>",[]) |> ret),
                                                                            (("visited" := ConstBool(true)) >>
                                                                             (MethodCall("option" , "Visit<Option<T>>", 
                                                                                        [(Code.GenericLambdaFuncDecl([], Code.New("None<T>", []) |> ret) )
-                                                                                        (Code.GenericLambdaFuncDecl(["t"], Code.New("Some<T>", [var "t"]) |> ret) )]) |> ret))))])) |> Unrepeated
+                                                                                        (Code.GenericLambdaFuncDecl(["t"], Code.New("Some<T>", [var "t"]) |> ret) )])))))
+                          ])) |> Unrepeated
       ] 
     SubSection("Considerations about bijective adapters")
     ItemsBlock 

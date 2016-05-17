@@ -14,5 +14,5 @@ let makeSlides (title : string) =
 [<EntryPoint>]
 let main argv = 
   do makeSlides "INFSEN02-2"
-  //do makeSlides "INFDEV02-4"
+  do makeSlides "INFDEV02-4"
   0    
