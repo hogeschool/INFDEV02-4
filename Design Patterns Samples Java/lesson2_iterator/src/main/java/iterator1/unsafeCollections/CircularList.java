@@ -7,7 +7,7 @@ package iterator1.unsafeCollections;
 
 import java.util.List;
 
-public class CircularList<T> implements IUnsafeIterator<T> {
+public class CircularList<T> implements ITraditionalIterator<T> {
 
     private List<T> list;
     private int index = -1;

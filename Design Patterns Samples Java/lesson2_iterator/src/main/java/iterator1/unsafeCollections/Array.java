@@ -5,7 +5,7 @@
  */
 package iterator1.unsafeCollections;
 
-public class Array<T> implements IUnsafeIterator<T> {
+public class Array<T> implements ITraditionalIterator<T> {
 
     private T[] array;
     private int index = -1;

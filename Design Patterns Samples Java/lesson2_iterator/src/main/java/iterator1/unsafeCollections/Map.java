@@ -2,12 +2,12 @@ package iterator1.unsafeCollections;
 
 import java.util.function.Function;
 
-public class Map<T, U> implements IUnsafeIterator<U> {
+public class Map<T, U> implements ITraditionalIterator<U> {
 
-    private IUnsafeIterator<T> decoratedCollection;
+    private ITraditionalIterator<T> decoratedCollection;
     private Function<T, U> f;
 
-    public Map(IUnsafeIterator<T> collection, Function<T, U> f) {
+    public Map(ITraditionalIterator<T> collection, Function<T, U> f) {
         this.decoratedCollection = collection;
         this.f = f;
     }

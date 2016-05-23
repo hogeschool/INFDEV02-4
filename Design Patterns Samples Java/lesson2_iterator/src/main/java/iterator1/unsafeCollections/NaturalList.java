@@ -1,6 +1,6 @@
 package iterator1.unsafeCollections;
 
-public class NaturalList implements IUnsafeIterator<Integer> {
+public class NaturalList implements ITraditionalIterator<Integer> {
 
     private int current = -1;
 

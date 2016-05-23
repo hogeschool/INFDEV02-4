@@ -12,6 +12,7 @@
     <modules>
         <module>Design Patterns Samples Java/lesson1_visitor</module>
         <module>Design Patterns Samples Java/lesson2_iterator</module>
+        <module>Design Patterns Samples Java/lesson3_adapter</module>
     </modules>
 
     <properties>
