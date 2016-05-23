@@ -3,20 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package iterator1;
+package adapter;
 
 import iterator1.safeCollections.Iterator;
-import visitor.optionLambda.*;
 import iterator1.unsafeCollections.ITraditionalIterator;
+import visitor.optionLambda.IOption;
+import visitor.optionLambda.None;
+import visitor.optionLambda.Some;
 
-public class UnsafeIteratorAdapter<T> implements Iterator<T> {
+public class MakeSafe<T> implements Iterator<T> {
 
     private ITraditionalIterator<T> iterator;
 
-    public UnsafeIteratorAdapter(ITraditionalIterator<T> iterator) {
+    public MakeSafe(ITraditionalIterator<T> iterator) {
         this.iterator = iterator;
     }
 
+    @Override
     public IOption<T> getNext() {
         if (iterator.moveNext()) {
             return new Some<T>(iterator.getCurrent());

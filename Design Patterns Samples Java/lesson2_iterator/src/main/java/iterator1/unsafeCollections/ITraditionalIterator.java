@@ -5,7 +5,7 @@
  */
 package iterator1.unsafeCollections;
 
- public interface IUnsafeIterator<T>
+ public interface ITraditionalIterator<T>
   {
     boolean moveNext();
     T getCurrent();
