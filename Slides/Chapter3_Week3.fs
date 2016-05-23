@@ -74,12 +74,12 @@ let slides (title : string) =
                       (classDef "LegacyLine" 
                         [
                         typedDef "Draw" [("int", "x1"); ("int", "y1"); ("int", "x2"); ("int", "y2");] "void" 
-                                 (Code.StaticMethodCall("Console", "WriteLine", [var "\"line from (\" + x1 + ',' + y1 + \") to (\" + x2 + ',' + y2 + ')'\""])) |> makePublic
+                                 (Code.StaticMethodCall("Console", "WriteLine", [var "\"line from (\" + x1 + ',' + y1 + \") to (\" + x2 + \",\" + y2 + \")\"])) |> makePublic
                         ] >>
                        classDef "LegacyRectangle" 
                         [
                         typedDef "Draw" [("int", "x"); ("int", "y"); ("int", "w"); ("int", "h");] "void" 
-                                 (Code.StaticMethodCall("Console", "WriteLine", [var "\"rectangle at (\" + x + ',' + y + \") with width \" + w + \" and height \" + h"])) |> makePublic
+                                 (Code.StaticMethodCall("Console", "WriteLine", [var "\"rectangle at (\" + x + \",\" + y + \") with width \" + w + \" and height \" + h"])) |> makePublic
                         ])) |> Unrepeated          
       ]
     SubSection("Consuming our LegacyLine and LegacyRectangle")
