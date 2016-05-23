@@ -200,7 +200,7 @@ let slides (title : string) =
                   ])
           Package("DrawingSystem", 
                   [
-                   Class("Client", 6.5, -3.0, Option.None, [], [])
+                   Class("Client", 6.5, -4.5, Option.None, [], [])
                    Interface("Shape",3.0,6.5,0.5,[Operation("Draw", [], Option.None)])
                    Class("Rectangle", 2.0, 1.5, Some "Shape", [], [])
                    Class("Line", 2.0, -1.5, Some "Shape", [], [])
@@ -223,8 +223,8 @@ let slides (title : string) =
       [
         ! @"Given two different interfaces \texttt{Source} and \texttt{Target}"
         ! @"An \texttt{Adapter} is built to adapt \texttt{Source} to \texttt{Target}"
-        ! @"The \texttt{Adapter} implements \texttt{Target} by means of a reference to texttt{Source}"
-        ! @"A \texttt{Client} interacts with the \texttt{Adapter} whenever it a \texttt{Target}, but we have a \texttt{Some}"
+        ! @"The \texttt{Adapter} implements \texttt{Target} by means of a reference to \texttt{Source}"
+        ! @"A \texttt{Client} interacts with the \texttt{Adapter} whenever it a \texttt{Target}, but we have a \texttt{Source}"
         ! @"In the following we provide a UML for such structure"
       ]
     UML
@@ -275,7 +275,7 @@ let slides (title : string) =
                   (genericClassDef ["T"]
                     "Some" 
                     [
-                      implements "Iterator<T>"
+                      implements "Option<T>"
                       typedDecl "value" "T" |> makePrivate
                       typedDeclAndInit "visited" "bool" (constBool(false)) |> makePrivate
                       typedDef "Some" ["T","value"] "" (("this.value" := var"value") >> endProgram) |> makePublic
@@ -356,7 +356,7 @@ let slides (title : string) =
                                                                            (("visited" := ConstBool(true)) >>
                                                                             (MethodCall("option" , "Visit<Option<T>>", 
                                                                                        [(Code.GenericLambdaFuncDecl([], Code.New("None<T>", []) |> ret) )
-                                                                                        (Code.GenericLambdaFuncDecl(["t"], Code.New("Some<T>", [var "t"]) |> ret) )])))))
+                                                                                        (Code.GenericLambdaFuncDecl(["t"], Code.New("Some<T>", [var "t"]) |> ret) )]) |> ret))))
                           ])) |> Unrepeated
       ] 
     SubSection("Considerations about bijective adapters")
@@ -381,8 +381,7 @@ let slides (title : string) =
             ! @"We need both, as they both make sense within their respective contexts!"     
           ]
         CSharpCodeBlock(TextSize.Tiny,
-                        (GenericInterfaceDef (["T"], "TraditionalIterator", [typedSig "MoveNext" [] "void"
-                                                                             typedSig "HasNext" [] "bool"
+                        (GenericInterfaceDef (["T"], "TraditionalIterator", [typedSig "MoveNext" [] "bool"
                                                                              typedSig "GetCurrent" [] "T"])) >>
                         (GenericInterfaceDef (["T"], "Iterator", [typedSig "GetNext" [] "IOption<T>"])) >> endProgram)
       ]     
