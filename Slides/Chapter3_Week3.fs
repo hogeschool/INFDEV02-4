@@ -74,7 +74,7 @@ let slides (title : string) =
                       (classDef "LegacyLine" 
                         [
                         typedDef "Draw" [("int", "x1"); ("int", "y1"); ("int", "x2"); ("int", "y2");] "void" 
-                                 (Code.StaticMethodCall("Console", "WriteLine", [var "\"line from (\" + x1 + ',' + y1 + \") to (\" + x2 + \",\" + y2 + \")\"])) |> makePublic
+                                 (Code.StaticMethodCall("Console", "WriteLine", [ConstString "\"line from (\" + x1 + ',' + y1 + \") to (\" + x2 + \",\" + y2 + \")\""])) |> makePublic
                         ] >>
                        classDef "LegacyRectangle" 
                         [
