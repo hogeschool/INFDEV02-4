@@ -52,6 +52,7 @@
     <Compile Include="Chapter6_Week6.fs" />
     <Compile Include="Chapter5_Week5.fs" />
     <Compile Include="Chapter4_Week4.fs" />
+    <Compile Include="Chapter4_0_Week4.fs" />
     <Compile Include="Chapter3_Week3.fs" />
     <Compile Include="Chapter2_Week2.fs" />
     <Compile Include="Chapter1_Week1v2.fs" />
