@@ -401,7 +401,7 @@ let slides (title : string) =
         CSharpCodeBlock(TextSize.Tiny,
                         (GenericInterfaceDef (["T"], "TraditionalIterator", [typedSig "MoveNext" [] "void"
                                                                              typedSig "HasNext" [] "bool"
-                                                                             typedSig "GetCurrent" [] "T"])) 
+                                                                             typedSig "GetCurrent" [] "T"]))
                          >> endProgram) 
         ItemsBlock
           [

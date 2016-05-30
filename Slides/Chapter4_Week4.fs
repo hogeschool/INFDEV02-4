@@ -14,7 +14,7 @@ let slides (title : string) =
     SubSection("Lecture topics")
     ItemsBlock
       [
-        ! @"POlymorphic constructors"
+        ! @"Polymorphic constructors"
         ! @"The factory design pattern"
         ! @"Abstract factory"
         ! @"Conclusions"
@@ -75,12 +75,13 @@ let slides (title : string) =
                          typedDeclAndInit "id" "int" (constInt -1) >>
                          Code.While(Code.Op(var "id", Operator.NotEquals, constInt 0),
                                     ("id" := StaticMethodCall("Int32", "Parse", [(StaticMethodCall("Console", "ReadLine", []))])) >>
-                                    (Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 1),
-                                                  MethodCall("animals", "Add", [newC "Cat" []]))) >>
-                                    (Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 2),
-                                                  MethodCall("animals", "Add", [newC "Dog" []]))) >>
-                                    (Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 3),
-                                                  MethodCall("animals", "Add", [newC "Bird" []])))))) |> Unrepeated
+                                    (Code.If(Code.Op(var "id", Operator.Equals, constInt 1),
+                                             MethodCall("animals", "Add", [newC "Cat" []]),
+                                             Code.If(Code.Op(var "id", Operator.Equals, constInt 2),
+                                                     MethodCall("animals", "Add", [newC "Dog" []]),
+                                                     Code.If(Code.Op(var "id", Operator.Equals, constInt 3),
+                                                             MethodCall("animals", "Add", [newC "Bird" []]), 
+                                                             Code.Throw (newC "Exception" [ConstString("Wrong input..")])))))))) |> Unrepeated
       ]
     SubSection "Consuming our ``animals'': from different clients"
     ItemsBlock
@@ -129,7 +130,8 @@ let slides (title : string) =
                                                               (Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 2),
                                                                             newC "Dog" [] |> ret)) >>
                                                               (Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 3),
-                                                                            newC "Bird" [] |> ret))) |> makeStatic |> makePublic
+                                                                            newC "Bird" [] |> ret)) >>
+                                                               Code.Throw (newC "Exception" [ConstString("Wrong input..")])) |> makeStatic |> makePublic
                                            TypedSigAbstract("MakeSound", [], "void") |> makePublic] >>
                           dots >>
                           (typedDeclAndInit "an_animal" "Animal" (staticMethodCall "Animal" "Instantiate" [StaticMethodCall("Int32", "Parse", [(StaticMethodCall("Console", "ReadLine", []))]) ])) >>
@@ -181,7 +183,8 @@ let slides (title : string) =
                                                             ((Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 1),
                                                                           newC "Ferrari" [] |> ret)) >>
                                                              (Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 2),
-                                                                          newC "Lamborghini" [] |> ret))) |> makeStatic |> makePublic
+                                                                          newC "Lamborghini" [] |> ret)) >>
+                                                              Code.Throw (newC "Exception" [ConstString("Wrong input..")])) |> makeStatic |> makePublic
                                          TypedSigAbstract("StartEngine", [], "void") |> makePublic] >>
                         dots >>
                         (typedDeclAndInit "a_vehicle" "Vehicle" (staticMethodCall "Vehicle" "Create" [(StaticMethodCall("Int32", "Parse", [(StaticMethodCall("Console", "ReadLine", []))]))])) >>
@@ -225,9 +228,11 @@ let slides (title : string) =
                                                             ((Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 1),
                                                                           newC "Ferrari" [] |> ret)) >>
                                                              (Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 2),
-                                                                          newC "Lamborghini" [] |> ret))) |> makePublic] >>
+                                                                          newC "Lamborghini" [] |> ret)) >>
+                                                              Code.Throw (newC "Exception" [ConstString("Wrong input..")])) |> makePublic] >>
                         dots >>
-                        (typedDeclAndInit "a_vehicle" "Vehicle" (staticMethodCall "VehicleFactory" "Create" [(StaticMethodCall("Int32", "Parse", [(StaticMethodCall("Console", "ReadLine", []))]))])) >>
+                        (typedDeclAndInit "vehicleFactory" "VehicleFactory" (newC "VehicleFactory" [])) >>
+                        (typedDeclAndInit "a_vehicle" "Vehicle" (methodCall "vehicleFactory" "Create" [(StaticMethodCall("Int32", "Parse", [(StaticMethodCall("Console", "ReadLine", []))]))])) >>
                         (methodCall "a_vehicle" "StartEngine" [])))
     CSharpCodeBlock(TextSize.Tiny, 
                       (classDef "Ferrari" 
@@ -306,9 +311,11 @@ let slides (title : string) =
                                        ((Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 1),
                                                      newC "Ferrari" [var "color"] |> ret)) >>
                                         (Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 2),
-                                                     newC "Lamborghini" [var "color"] |> ret))) |> makePublic] >>
+                                                     newC "Lamborghini" [var "color"] |> ret)) >>
+                                        Code.Throw (newC "Exception" [ConstString("Wrong input..")])) |> makeOverride |> makePublic] >>
                      dots >>
-                     (typedDeclAndInit "a_vehicle" "Vehicle" (staticMethodCall "ConcreteVehicleFactory" "Create" [StaticMethodCall("Int32", "Parse", [(StaticMethodCall("Console", "ReadLine", []))]); ConstString("Color.Red")])) >>
+                     (typedDeclAndInit "vehicleFactory" "VehicleFactory" (newC "ConcreteVehicleFactory" [])) >>
+                     (typedDeclAndInit "a_vehicle" "Vehicle" (methodCall "vehicleFactory" "Create" [StaticMethodCall("Int32", "Parse", [(StaticMethodCall("Console", "ReadLine", []))]); ConstString("Color.Red")])) >>
                      (methodCall "a_vehicle" "StartEngine" [])))
 
     SubSection "Fixed attribute and factories"
@@ -326,17 +333,20 @@ let slides (title : string) =
                                        ((Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 1),
                                                      newC "Ferrari" [constString "Red"] |> ret)) >>
                                         (Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 2),
-                                                     newC "Lamborghini" [constString "Red"] |> ret))) |> makePublic] >>
+                                                     newC "Lamborghini" [constString "Red"] |> ret))>>
+                                        Code.Throw (newC "Exception" [ConstString("Wrong input..")])) |> makeOverride |> makePublic] >>
                      classDef "YellowVehicleFactory" 
                             [implements "VehicleFactory"
                              typedDef "Create" ["int", "id"] "Vehicle" 
                                        ((Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 1),
                                                      newC "Ferrari" [constString "Yellow"] |> ret)) >>
                                         (Code.IfThen(Code.Op(var "id", Operator.Equals, constInt 2),
-                                                     newC "Lamborghini" [constString "Yellow"] |> ret))) |> makePublic] >>
+                                                     newC "Lamborghini" [constString "Yellow"] |> ret))>>
+                                         Code.Throw (newC "Exception" [ConstString("Wrong input..")])) |> makeOverride |> makePublic] >>
 
                      dots >>
-                     (typedDeclAndInit "a_vehicle" "Vehicle" (staticMethodCall "YellowVehicleFactory" "Create" [StaticMethodCall("Int32", "Parse", [(StaticMethodCall("Console", "ReadLine", []))])])) >>
+                     (typedDeclAndInit "vehicleFactory" "VehicleFactory" (newC "YellowVehicleFactory" [])) >>
+                     (typedDeclAndInit "a_vehicle" "Vehicle" (methodCall "vehicleFactory" "Create" [StaticMethodCall("Int32", "Parse", [(StaticMethodCall("Console", "ReadLine", []))])])) >>
                      (methodCall "a_vehicle" "StartEngine" [])))
     CSharpCodeBlock(TextSize.Tiny, 
                       (interfaceDef "Vehicle"
@@ -413,7 +423,7 @@ let slides (title : string) =
                              typedDef "CreateSeat" [] "Seat" dots |> makePublic
                              typedDef "CreateTire" [] "Tire" dots |> makePublic] >>
 
-                     dots))
+                     dots)) |> Unrepeated
     CSharpCodeBlock(TextSize.Tiny, 
                     (classDef "Garage" 
                             [

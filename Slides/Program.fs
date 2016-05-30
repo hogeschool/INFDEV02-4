@@ -6,6 +6,7 @@ let makeSlides (title : string) =
 //  do batchProcess LatexDefinition.generatePresentation (Chapter3.Week3.v1.slides title) (sprintf "%s_Lec3_DP_adapter" title) "The INFDEV team" "Adapting interfaces" true true
   do batchProcess LatexDefinition.generatePresentation (Chapter4_0.Week4.v1.slides title) (sprintf "%s_Lec4A_DP_abstract_classes" title) "The INFDEV team" "Abstract classes" true true
   do batchProcess LatexDefinition.generatePresentation (Chapter4.Week4.v1.slides title) (sprintf "%s_Lec4B_DP_factory" title) "The INFDEV team" "Factory (virtual constructors)" true true
+//  do batchProcess LatexDefinition.generateDocument (exam4.exam ) (sprintf "%s_EXAM_FIRST_ATTEMPT" title) "The INFDEV team" "INFDEV02-4 (exam) - First attempt" true true
 
 
 // REMOVE UNREPEATED EVERYWHERE IT WORKS!!!!!!!!! FREE SLIDEZ!!!!1111oneoneone
