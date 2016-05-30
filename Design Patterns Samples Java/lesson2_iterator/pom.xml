@@ -11,12 +11,11 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-
     <dependencies>
         <dependency>
-            <groupId>nl.hr.cmi.infdev4</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>lesson1_visitor</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

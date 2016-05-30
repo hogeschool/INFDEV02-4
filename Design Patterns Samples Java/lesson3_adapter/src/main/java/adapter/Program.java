@@ -10,5 +10,8 @@ package adapter;
  * @author busal
  */
 public class Program {
+    public static void main(String[] args) {
+        
+    }
     
 }
