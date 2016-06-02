@@ -133,7 +133,7 @@ namespace Lesson2
         if (index + 1 < array.Length)
           return false;
         index++;
-        return true;
+        return true;  
       }
       public void Reset()
       {
@@ -141,31 +141,7 @@ namespace Lesson2
       }
 
     }
-    public class Map<T, U> : TraditionalIterator<U>
-    {
-      private TraditionalIterator<T> decoratedCollection;
-      Func<T, U> f;
-      public Map(TraditionalIterator<T> collection, Func<T, U> f)
-      {
-        this.decoratedCollection = collection;
-        this.f = f;
-      }
-
-      public U Current
-      {
-        get
-        {
-          return f(decoratedCollection.Current);
-        }
-      }
-
-      public bool MoveNext()
-      {
-        return decoratedCollection.MoveNext();
-      }
-
-
-    }
+    
   }
 
 
@@ -178,7 +154,7 @@ namespace Lesson2
 
 
       TraditionalIterator<int> elems = new UnsafeCollections.NaturalList();
-      //UnsafeCollections.Map<int, string> mapped_elems = new UnsafeCollections.Map<int, string>(elems, x => x.ToString() + " is a string now..");
+      
       elems.MoveNext();
       while (true)
       {
