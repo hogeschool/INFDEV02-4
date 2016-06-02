@@ -43,7 +43,7 @@ namespace Lesson_5
 
       public Option<T> GetNext()
       {
-        var next = iterator.GetNext();
+        Option<T> next = iterator.GetNext();
         if (next.Visit(() => true, _ => false))
           return next;
         return next.Visit(() => next, value =>
