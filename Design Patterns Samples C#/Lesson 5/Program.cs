@@ -155,8 +155,34 @@ namespace Lesson_5
   }
   class Program
   {
+    public interface I { void X(); }
+    abstract class A : I
+    {
+      public abstract void X();
+      public void Test()
+      {
+        Console.WriteLine("A");
+      }
+    }
+    class B : A
+    {
+      public new void Test()
+      {
+        base.Test();
+        Console.WriteLine("B");
+      }
+
+      public override void X()
+      {
+        throw new NotImplementedException();
+      }
+    }
+
     static void Main(string[] args)
     {
+
+      B b = new B();
+      b.Test();
       ///Example 1 test
       //Iterator<int> iterator = new Lesson2.SafeCollections.NaturalList();
       //Iterator<int> iterator = new Filter<int>(new Lesson2.SafeCollections.NaturalList(), value => value % 2 == 0);

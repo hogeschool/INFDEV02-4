@@ -496,9 +496,9 @@ let slides (title : string) =
         ]
       CSharpCodeBlock(TextSize.Tiny,
                       (typedDeclAndInit "number" "IOption<int>" (Code.New("Some<int>", [constInt(5)])) >>
-                       typedDeclAndInit "inc_number" "int" (Code.MethodCall("number", "Visit", [Code.GenericLambdaFuncDecl([], Code.ConstString("I am None...") |> ret )
-                                                                                                Code.GenericLambdaFuncDecl(["x"], ret (Code.MethodCall("x", "toString",[])))])) >>
-                                                                                                endProgram )) |> Unrepeated
+                       typedDeclAndInit "res" "string" (Code.MethodCall("number", "Visit", [Code.GenericLambdaFuncDecl([], Code.ConstString("I am None...") |> ret )
+                                                                                            Code.GenericLambdaFuncDecl(["x"], ret (Code.MethodCall("x", "toString",[])))])) >>
+                                                                                            endProgram )) |> Unrepeated
       ]
 
     SubSection("Adapting lambdas in the first previous - LambdaIOptionVisitor<T, U>")
