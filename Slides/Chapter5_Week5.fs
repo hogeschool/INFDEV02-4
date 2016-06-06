@@ -22,18 +22,26 @@ let slides (title : string) =
     ItemsBlock
       [
        ! @"Today we are going to study a behavioral pattern: the decorator design pattern"
-       ! @"Sometimes, we need to modify behaviors (or to add responsibilities) of an object dynamically"
+       ! @"Consider a series of objects and their customizations (\textit{behaviours})"
+       ! @"Sometimes, we need to dynamically bind objects and zero or more behaviors"
 
       ]
     ItemsBlock
       [
-        ! @"Hand made combinations could be a solution, but excessive inheritance is a pitfall, since the amount of combinations could be huge"
+        ! @"Hand made combinations could be a solution"
         ! @"Examples:"
-        ! @"Add a turbo to a \texttt{Car}"
-        ! @"Add a truck to a \texttt{Car}"
-        ! @"Add an extra seat to a \texttt{Car}"
-        ! @"Add a turbo and an extra seat to a \texttt{Car}"
-        ! @"etc."
+        ItemsBlock[
+          ! @"Add a turbo to a \texttt{Car}"
+          ! @"Add an extra seat to a \texttt{Car}"
+          ! @"Add a turbo and an extra seat to a \texttt{Car}"
+          ! @"etc."
+        ]
+      ]
+    ItemsBlock
+      [
+        ! @"All possible combinations of objects and behaviors are too many"
+        ! @"We cannot have a class for each"
+        ! @"Moreover, we need \textit{dynamism} of the binding: add or remove behaviors at runtime"
       ]
 
     ItemsBlock
@@ -130,7 +138,7 @@ let slides (title : string) =
                             implements "Iterator<int>"
                             typedDecl "current" "int" |> makePrivate
                             typedDecl "offset" "int" |> makePrivate
-                            typedDef "EvensFrom" ["Offset", "offset"] "" (("current" := ConstInt(-1)) >> ("this.offset" := var "offset") >> endProgram) |> makePublic
+                            typedDef "EvensFrom" ["int", "offset"] "" (("current" := ConstInt(-1)) >> ("this.offset" := var "offset") >> endProgram) |> makePublic
                             typedDef "GetNext" [] "IOption<int>" (("current" := Code.Op(var "current", Operator.Plus, (ConstInt(1)))) >> 
                                                                   Code.If(Code.Op((Code.Op(var "current", Operator.Percent, ConstInt(2))), Operator.Equals, ConstInt(0)),
                                                                           Code.New("Some<int>",[var "current" .+ var "offset"]) |> ret,
@@ -323,6 +331,8 @@ let slides (title : string) =
        ItemsBlock
         [
           ! @"\texttt{Naturals} $\rightarrow$ \texttt{Evens} $\rightarrow$ \texttt{Offset}"
+          ! @"\texttt{Range} $\rightarrow$ \texttt{Odd} $\rightarrow$ \texttt{TimesTwo}"
+          ! @"\texttt{List} $\rightarrow$ \texttt{Even}"
           ! @"etc."
         ]
       ] 
@@ -355,7 +365,7 @@ let slides (title : string) =
       ! @"Given a polymorphic type $I$ (to instantiate)"
       ! @"Given a series of concrete implementations of $I$: $C_1,..,C_m$"
       ! @"A decorator $D$ is an entity that implements $I$ and references an instance of $I$"
-      ! @"Given a series of concrete decorators $CD1,...,CD_n$ extends $D$"
+      ! @"Given a series of concrete decorators $CD_1,...,CD_n$ extends $D$"
       ! @"As concrete $CD$'s come with difference semantics, every $CD$ is tasked to apply its semantics by overriding methods of the inherited $D$"
      ]
     ItemsBlock
