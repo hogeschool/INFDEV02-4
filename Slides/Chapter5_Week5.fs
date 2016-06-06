@@ -475,7 +475,7 @@ let slides (title : string) =
     ItemsBlock
       [
         ! @"Of course we can combine them, so to express our \texttt{EvensFrom}"
-        ! @"\texttt{Iterator<int>} numbers = new Filter(new Map(new Range(0,5), n => n + 1), n => n % 2 == 0);}"
+        ! @"\texttt{Iterator<int>} numbers = \texttt{new Filter(new Map(new Range(0,5), n => n + 1), n => n \% 2 == 0);}"
       ]
     Section "Conclusions"     
     SubSection "Conclusions"
