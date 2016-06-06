@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
         <groupId>nl.hr.cmi.infdev4</groupId>
-    <artifactId>lesson3_adapter</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>lesson5_decorator</artifactId>
+    <packaging>jar</packaging>  
     <parent>
         <groupId>nl.hr.cmi.infdev4</groupId>
         <artifactId>INFDEV02-4</artifactId>
@@ -16,6 +16,6 @@
             <artifactId>lesson2_iterator</artifactId>
             <version>${project.version}</version>
         </dependency>
-
     </dependencies>
+    <name>lesson5_decorator</name>
 </project>
