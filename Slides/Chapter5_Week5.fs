@@ -332,15 +332,10 @@ let slides (title : string) =
        ! @"Note how decomposability helps to keep the interaction surface clean and reusable and the implementation compact"
        ! @"We now show the UML of our code"
       ] 
-    UML
-        [ 
-            Interface("Iterator<T>",5.0,0.0,0.0,[Operation("GetNext", [], Some "IOption<T>")])
-            Class("Naturals", -3.0, -3.0, Some "Iterator<T>", [], [Operation("GetNext", [], Some "IOption<int>")])
-            Class("Decorator", 3.0, -3.0, Some "Iterator<T>", [Attribute("component", "Iterator<int>")], [Operation("GetNext", [], Some "IOption<int>")])
-            Class("Evens", 0.0, -6.0, Some "Decorator", [], [Operation("GetNext", [], Some "IOption<int>")])
-            Class("Offset", 6.0, -6.0, Some "Decorator", [], [Operation("GetNext", [], Some "IOption<int>")])
-            Aggregation("Decorator", "", Option.None, "Iterator<T>")
-        ]
+    ItemsBlock
+      [
+        Image("Class Diagram0.jpg", 0.3)
+      ]
     SubSection "Considerations"
     ItemsBlock
       [
@@ -356,14 +351,10 @@ let slides (title : string) =
       ! @"A concrete decorator $CD$ extends $D$"
       ! @"As concrete $CD$'s come with difference semantics, every $CD$ is tasked to apply its semantics by overriding methods of the inherited $D$"
      ]
-    UML
-        [ 
-            Interface("I",5.0,0.0,0.0,[Operation("Operation", [], Some "")])
-            Class("C", -3.0, -3.0, Some "I", [], [Operation("Operation", [], Some "")])
-            Class("D", 3.0, -3.0, Some "I", [Attribute("component", "I")], [Operation("Operation", [], Some "")])
-            Class("DC", 0.0, -6.0, Some "Decorator", [], [Operation("Operation", [], Some "")])
-            Aggregation("Decorator", "", Option.None, "Iterator<T>")
-        ]
+    ItemsBlock
+      [
+        Image("Class Diagram1.jpg", 0.3)
+      ]
     SubSection "Generic decorators"
     ItemsBlock
       [
