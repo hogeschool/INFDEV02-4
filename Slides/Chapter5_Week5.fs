@@ -257,27 +257,9 @@ let slides (title : string) =
       ]
     VerticalStack
       [
-        ItemsBlockWithTitle "Idea: even class"
+        ItemsBlockWithTitle "Idea: even class, with lambdas"
           [
-           ! @"In the following you find the code for \texttt{Even}"
-          ]
-        CSharpCodeBlock( TextSize.Tiny,
-                            (classDef "Even" 
-                              [
-                                implements "Decorator"
-                                typedDefWithBase "Even" ["Iterator<int>", "collection"] "" ["collection"] endProgram |> makePublic
-                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
-                                                                      Code.If(MethodCallInline("current", "IsNone", []), ret (newC "None<int>" []),
-                                                                              Code.If(Code.Op((Code.Op(var "current.GetValue()", Operator.Percent, ConstInt(2))), Operator.Equals, ConstInt(0)),
-                                                                                              Code.New("Some<int>",[var "current.GetValue()"]) |> ret,
-                                                                                              MethodCall("this", "GetNext", []) |> ret))) |> makeOverride |> makePublic
-                              ])) |> Unrepeated          
-      ]
-    VerticalStack
-      [
-        ItemsBlockWithTitle "Idea: even class"
-          [
-           ! @"In the following you find the code for \texttt{Even} with lambdas"
+           ! @"In the following you find the code for \texttt{Even}, with lambdas"
           ]
         CSharpCodeBlock( TextSize.Tiny,
                             (classDef "Even" 
@@ -297,6 +279,23 @@ let slides (title : string) =
         ItemsBlockWithTitle "Idea: offset class"
           [
            ! @"In the following you find the code for \texttt{Offset}"
+          ]
+        CSharpCodeBlock( TextSize.Tiny,
+                            (classDef "Offset" 
+                              [
+                                implements "Decorator"
+                                typedDecl "offset" "int" |> makePrivate
+                                typedDef "Offset" ["Offset", "offset"] "" (("this.offset" := var "offset") >> endProgram) |> makePublic
+                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
+                                                                      Code.If(MethodCallInline("current", "IsNone", []), ret (newC "None<int>" []), 
+                                                                              Code.New("Some<int>",[var "current.GetValue()" .+ var "offset"]) |> ret)) |> makeOverride |> makePublic
+                              ])) |> Unrepeated          
+      ]
+    VerticalStack
+      [
+        ItemsBlockWithTitle "Idea: offset class, with lambdas"
+          [
+           ! @"In the following you find the code for \texttt{Offset}, with lambdas"
           ]
         CSharpCodeBlock( TextSize.Tiny,
                             (classDef "Offset" 
