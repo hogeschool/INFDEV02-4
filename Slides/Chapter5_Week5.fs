@@ -10,25 +10,32 @@ let slides (title : string) =
   [
     Section(sprintf "%s" title)
     Section("Introduction")
+    SubSection("Lecture topics")
+    ItemsBlock
+      [
+        ! @"Adding responsibilities dynamically"
+        ! @"Possible solutions and pitfalls"
+        ! @"The decorator design pattern"
+        ! @"Conclusions"
+      ]
     SubSection "Introduction"
     ItemsBlock
       [
        ! @"Today we are going to study a behavioral pattern: the decorator design pattern"
-       ! @"Sometimes, we need to modify behaviors of an instance dynamically"
+       ! @"Sometimes, we need to modify behaviors (or to add responsibilities) of an object dynamically"
+
       ]
     ItemsBlock
       [
-       ! @"Hand made combinations could be a solution, but excessive inheritance is a pitfall, since the amount of combinations could be huge:"
-       ItemsBlock
-        [
-          ! @"\texttt{Car} $\rightarrow$ with turbo $\rightarrow$ new class"
-          ! @"\texttt{Car} $\rightarrow$ with truck $\rightarrow$ new class"
-          ! @"\texttt{Car} $\rightarrow$ with extra seat $\rightarrow$ new class"
-          ! @"\texttt{Car} $\rightarrow$ with turbo + extra seat $\rightarrow$ new class"
-          ! @"etc."
-        ]
-
+        ! @"Hand made combinations could be a solution, but excessive inheritance is a pitfall, since the amount of combinations could be huge"
+        ! @"Examples:"
+        ! @"Add a turbo to a \texttt{Car}"
+        ! @"Add a truck to a \texttt{Car}"
+        ! @"Add an extra seat to a \texttt{Car}"
+        ! @"Add a turbo and an extra seat to a \texttt{Car}"
+        ! @"etc."
       ]
+
     ItemsBlock
       [
        ! @"The decorator pattern (also known as wrapper) solves this issue"
@@ -229,7 +236,7 @@ let slides (title : string) =
     ItemsBlock
       [
         ! @"We can think of the decorator as an iterator containing elements, but which does not know how to iterate them"
-        ! @"A concrete decorator needs a specific specification of how to iterate"
+        ! @"A concrete decorator needs a specification of how to iterate"
       ]
 
     ItemsBlock
@@ -285,7 +292,7 @@ let slides (title : string) =
                               [
                                 implements "Decorator"
                                 typedDecl "offset" "int" |> makePrivate
-                                typedDef "Offset" ["Offset", "offset"] "" (("this.offset" := var "offset") >> endProgram) |> makePublic
+                                typedDefWithBase "Offset" ["int", "offset"; "Iterator<int>", "collection"] "" ["collection"] (("this.offset" := var "offset") >> endProgram) |> makePublic
                                 typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                                       Code.If(MethodCallInline("current", "IsNone", []), ret (newC "None<int>" []), 
                                                                               Code.New("Some<int>",[var "current.GetValue()" .+ var "offset"]) |> ret)) |> makeOverride |> makePublic
@@ -302,7 +309,7 @@ let slides (title : string) =
                               [
                                 implements "Decorator"
                                 typedDecl "offset" "int" |> makePrivate
-                                typedDef "Offset" ["Offset", "offset"] "" (("this.offset" := var "offset") >> endProgram) |> makePublic
+                                typedDefWithBase "Offset" ["int", "offset"; "Iterator<int>", "collection"] "" ["collection"] (("this.offset" := var "offset") >> endProgram) |> makePublic
                                 typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                                       (Code.MethodCall("current", "Visit", [Code.GenericLambdaFuncDecl([], ret (newC "None<int>" []))
                                                                                                             Code.GenericLambdaFuncDecl(["current"], Code.New("Some<int>",[var "current" .+ var "offset"]) |> ret)]))) |> makeOverride |> makePublic
@@ -346,9 +353,9 @@ let slides (title : string) =
     SubSection "Formalism"
     ItemsBlock [ 
       ! @"Given a polymorphic type $I$ (to instantiate)"
-      ! @"Given a concrete implementations of $I$: $C$"
+      ! @"Given a series of concrete implementations of $I$: $C_1,..,C_m$"
       ! @"A decorator $D$ is an entity that implements $I$ and references an instance of $I$"
-      ! @"A concrete decorator $CD$ extends $D$"
+      ! @"Given a series of concrete decorators $CD1,...,CD_n$ extends $D$"
       ! @"As concrete $CD$'s come with difference semantics, every $CD$ is tasked to apply its semantics by overriding methods of the inherited $D$"
      ]
     ItemsBlock
@@ -427,8 +434,7 @@ let slides (title : string) =
                               [
                                 implements "Decorator"
                                 typedDecl "t" "Func<int, int>"
-                                typedDecl "offset" "int" |> makePrivate
-                                typedDef "Map" ["Offset", "offset"] "" (("this.offset" := var "offset") >> endProgram) |> makePublic
+                                typedDefWithBase "Map" ["Func<int, int>", "t"; "Iterator<int>", "collection"] "" ["collection"] (("this.t" := var "t") >> endProgram) |> makePublic
                                 typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                                        Code.If(MethodCallInline("current", "IsNone", []), ret (newC "None<int>" []),
                                                                                Code.New("Some<int>",[Code.MethodCallInline("t", "Invoke", [var "current.GetValue()"])]) |> ret)) |> makeOverride |> makePublic
@@ -451,8 +457,7 @@ let slides (title : string) =
                               [
                                 implements "Decorator"
                                 typedDecl "t" "Func<int, int>"
-                                typedDecl "offset" "int" |> makePrivate
-                                typedDef "Map" ["Offset", "offset"] "" (("this.offset" := var "offset") >> endProgram) |> makePublic
+                                typedDefWithBase "Map" ["Offset", "offset"; "Iterator<int>", "collection"] "" ["collection"] (("this.offset" := var "offset") >> endProgram) |> makePublic
                                 typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                                       (Code.MethodCall("current", "Visit", [Code.GenericLambdaFuncDecl([], ret (newC "None<int>" []))
                                                                                                             Code.GenericLambdaFuncDecl(["current"], Code.New("Some<int>",[Code.MethodCallInline("t", "Invoke", [var "current"])]) |> ret)]))) |> makeOverride |> makePublic
