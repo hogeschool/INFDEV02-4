@@ -7,8 +7,9 @@ public class NaturalList implements Iterator<Integer> {
 
     private int current = -1;
 
+    @Override
     public IOption<Integer> getNext() {
         current++;
-        return new Some<Integer>(current);
+        return new Some<>(current);
     }
 }

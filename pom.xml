@@ -13,6 +13,8 @@
         <module>Design Patterns Samples Java/lesson1_visitor</module>
         <module>Design Patterns Samples Java/lesson2_iterator</module>
         <module>Design Patterns Samples Java/lesson3_adapter</module>
+        <module>Design Patterns Samples Java/lesson4_factory</module>
+        <module>Design Patterns Samples Java/lesson5_decorator</module>
     </modules>
 
     <properties>

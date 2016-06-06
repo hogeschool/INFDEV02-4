@@ -234,4 +234,8 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
-/Design Patterns Samples Java/LESSON1/target/
+/Design Patterns Samples Java/lesson1_visitor/target/
+/Design Patterns Samples Java/lesson2_iterator/target/
+/Design Patterns Samples Java/lesson3_adapter/target/
+/Design Patterns Samples Java/lesson4_factory/target/
+/Design Patterns Samples Java/lesson5_decorator/target/

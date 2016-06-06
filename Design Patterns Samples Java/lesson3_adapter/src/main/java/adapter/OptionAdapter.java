@@ -9,11 +9,13 @@ public class OptionAdapter<T> implements Iterator<T>
   {
     private IOption<T> option;
     private boolean visited = false;
+    
     public OptionAdapter(IOption<T> option)
     {
       this.option = option;
     }
     
+    @Override
    public IOption<T> getNext()
     {
       if (visited)
