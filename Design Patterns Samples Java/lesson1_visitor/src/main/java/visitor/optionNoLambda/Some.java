@@ -16,4 +16,12 @@ public class Some<T> implements IOption<T> {
     public <U> U visit(IOptionVisitor<T, U> visitor) {
         return visitor.onSome(value);
     }
+    
+    public T getValue() {
+        return this.value;
+    }
+    
+    public Boolean isNone() {
+        return false;
+    }
 }
