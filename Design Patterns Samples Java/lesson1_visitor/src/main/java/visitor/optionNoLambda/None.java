@@ -5,9 +5,20 @@
  */
 package visitor.optionNoLambda;
 
-class None<T> implements IOption<T> {
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+public class None<T> implements IOption<T> {
 
     public <U> U visit(IOptionVisitor<T, U> visitor) {
         return visitor.onNone();
     }
+    
+    public T getValue(){
+        throw new NotImplementedException();
+    }
+    
+    public Boolean isNone() {
+        return true;
+    }
+ 
 }
