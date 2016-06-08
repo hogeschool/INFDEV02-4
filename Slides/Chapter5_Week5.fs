@@ -263,7 +263,7 @@ let slides (title : string) =
                               [
                                 implements "Decorator"
                                 typedDefWithBase "Even" ["Iterator<int>", "collection"] "" ["collection"] endProgram |> makePublic
-                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
+                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "IOption<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                                       Code.If(MethodCallInline("current", "IsNone", []), ret (newC "None<int>" []), 
                                                                                               Code.If(Code.Op((Code.Op(var "current.GetValue()", Operator.Percent, ConstInt(2))), Operator.Equals, ConstInt(0)),
                                                                                                               Code.New("Some<int>",[var "current.GetValue()"]) |> ret,
@@ -281,7 +281,7 @@ let slides (title : string) =
                               [
                                 implements "Decorator"
                                 typedDefWithBase "Even" ["Iterator<int>", "collection"] "" ["collection"] endProgram |> makePublic
-                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
+                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "IOption<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                                       (Code.MethodCall("current", "Visit", [Code.GenericLambdaFuncDecl([], ret (newC "None<int>" []))
                                                                                                             Code.GenericLambdaFuncDecl(["current"], 
                                                                                                                                          Code.If(Code.Op((Code.Op(var "current", Operator.Percent, ConstInt(2))), Operator.Equals, ConstInt(0)),
@@ -301,7 +301,7 @@ let slides (title : string) =
                                 implements "Decorator"
                                 typedDecl "offset" "int" |> makePrivate
                                 typedDefWithBase "Offset" ["int", "offset"; "Iterator<int>", "collection"] "" ["collection"] (("this.offset" := var "offset") >> endProgram) |> makePublic
-                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
+                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "IOption<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                                       Code.If(MethodCallInline("current", "IsNone", []), ret (newC "None<int>" []), 
                                                                               Code.New("Some<int>",[var "current.GetValue()" .+ var "offset"]) |> ret)) |> makeOverride |> makePublic
                               ])) |> Unrepeated          
@@ -318,7 +318,7 @@ let slides (title : string) =
                                 implements "Decorator"
                                 typedDecl "offset" "int" |> makePrivate
                                 typedDefWithBase "Offset" ["int", "offset"; "Iterator<int>", "collection"] "" ["collection"] (("this.offset" := var "offset") >> endProgram) |> makePublic
-                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
+                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "IOption<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                                       (Code.MethodCall("current", "Visit", [Code.GenericLambdaFuncDecl([], ret (newC "None<int>" []))
                                                                                                             Code.GenericLambdaFuncDecl(["current"], Code.New("Some<int>",[var "current" .+ var "offset"]) |> ret)]))) |> makeOverride |> makePublic
                               ])) |> Unrepeated          
@@ -393,7 +393,7 @@ let slides (title : string) =
                         implements "Decorator"
                         typedDecl "p" "Func<int, bool>"
                         typedDefWithBase "Filter" ["Iterator<int>", "collection";"Func<int, bool>","p"] "" ["collection"] ("this.p" := var "p") |> makePublic
-                        typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
+                        typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "IOption<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                               Code.If(MethodCallInline("current", "IsNone", []), ret (newC "None<int>" []),
                                                               
                                                                       Code.If(MethodCallInline("p", "Invoke", [var "current.GetValue()"]),
@@ -418,7 +418,7 @@ let slides (title : string) =
                         implements "Decorator"
                         typedDecl "p" "Func<int, bool>"
                         typedDefWithBase "Filter" ["Iterator<int>", "collection";"Func<int, bool>","p"] "" ["collection"] ("this.p" := var "p") |> makePublic
-                        typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
+                        typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "IOption<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                               (Code.MethodCall("current", "Visit", [Code.GenericLambdaFuncDecl([], ret (newC "None<int>" []))
                                                                                                     Code.GenericLambdaFuncDecl(["current"], 
                                                                                                                                   Code.If(MethodCallInline("p", "Invoke", [var "current"]),
@@ -445,7 +445,7 @@ let slides (title : string) =
                                 implements "Decorator"
                                 typedDecl "t" "Func<int, int>"
                                 typedDefWithBase "Map" ["Func<int, int>", "t"; "Iterator<int>", "collection"] "" ["collection"] (("this.t" := var "t") >> endProgram) |> makePublic
-                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
+                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "IOption<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                                        Code.If(MethodCallInline("current", "IsNone", []), ret (newC "None<int>" []),
                                                                                Code.New("Some<int>",[Code.MethodCallInline("t", "Invoke", [var "current.GetValue()"])]) |> ret)) |> makeOverride |> makePublic
                               ] >>
@@ -468,7 +468,7 @@ let slides (title : string) =
                                 implements "Decorator"
                                 typedDecl "t" "Func<int, int>"
                                 typedDefWithBase "Map" ["Offset", "offset"; "Iterator<int>", "collection"] "" ["collection"] (("this.offset" := var "offset") >> endProgram) |> makePublic
-                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "Option<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
+                                typedDef "GetNext" [] "IOption<int>" ((typedDeclAndInit "current" "IOption<int>" (Code.MethodCall("base.decorated_item", "GetNext", []))) >>
                                                                       (Code.MethodCall("current", "Visit", [Code.GenericLambdaFuncDecl([], ret (newC "None<int>" []))
                                                                                                             Code.GenericLambdaFuncDecl(["current"], Code.New("Some<int>",[Code.MethodCallInline("t", "Invoke", [var "current"])]) |> ret)]))) |> makeOverride |> makePublic
                               ] >>
