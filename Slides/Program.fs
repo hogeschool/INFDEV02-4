@@ -6,8 +6,7 @@ let makeSlides (title : string) =
 //  do batchProcess LatexDefinition.generatePresentation (Chapter3.Week3.v1.slides title) (sprintf "%s_Lec3_DP_adapter" title) "The INFDEV team" "Adapting interfaces" true true
 //  do batchProcess LatexDefinition.generatePresentation (Chapter4_0.Week4.v1.slides title) (sprintf "%s_Lec4A_DP_abstract_classes" title) "The INFDEV team" "Abstract classes" true true
 //  do batchProcess LatexDefinition.generatePresentation (Chapter4.Week4.v1.slides title) (sprintf "%s_Lec4B_DP_factory" title) "The INFDEV team" "Factory (virtual constructors)" true true
-//  do batchProcess LatexDefinition.generatePresentation (Chapter5.Week5.v1.slides title) (sprintf "%s_Lec5_DP_decorator" title) "The INFDEV team" "The decorator design pattern" true true
-  do batchProcess LatexDefinition.generateDocument (TestExamWithSolution.exam title) (sprintf "%s_test" title) "The INFDEV team" "Exam test 1" true true
+  do batchProcess LatexDefinition.generatePresentation (Chapter5.Week5.v1.slides title) (sprintf "%s_Lec5_DP_decorator" title) "The INFDEV team" "The decorator design pattern" true true
 
 
 
