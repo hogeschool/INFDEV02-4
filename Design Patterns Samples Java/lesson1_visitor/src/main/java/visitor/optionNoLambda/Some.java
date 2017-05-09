@@ -13,14 +13,17 @@ public class Some<T> implements IOption<T> {
         this.value = value;
     }
 
+    @Override
     public <U> U visit(IOptionVisitor<T, U> visitor) {
         return visitor.onSome(value);
     }
     
+    @Override
     public T getValue() {
         return this.value;
     }
     
+    @Override
     public Boolean isNone() {
         return false;
     }

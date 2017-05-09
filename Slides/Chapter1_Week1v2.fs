@@ -511,10 +511,10 @@ let slides (title : string) =
         CSharpCodeBlock(TextSize.Tiny,
                   ((genericClassDef ["T"; "U"]
                                     "LambdaIOptionVisitor"
-                                    [implements "IOption<T>"
-                                     typedDecl "oneSome" "Func<T, U>" |> makePrivate
+                                    [implements "IOptionVisitor<T, U>"
+                                     typedDecl "onSome" "Func<T, U>" |> makePrivate
                                      typedDecl "onNone" "Func<U>" |> makePrivate
-                                     typedDef "LambdaOptionVisitor" ["Func<T, U>","onSome";"Func<U>","onNone"] "" (("this.onNone" := var"onNone") >> ("this.onSome" := var"onSome") >> endProgram) |> makePublic
+                                     typedDef "LambdaOptionVisitor" ["Func<U>","onNone";"Func<T, U>","onSome"] "" (("this.onNone" := var"onNone") >> ("this.onSome" := var"onSome") >> endProgram) |> makePublic
                                      typedDef "onSome<U>" [("T","value")] "U" ((Code.Call("onSome", [var "value"]) |> ret) >> endProgram) |> makePublic
                                      typedDef "onNone<U>" [] "U" ((Code.Call("onNone", []) |> ret) >> endProgram) |> makePublic
                                      ]
