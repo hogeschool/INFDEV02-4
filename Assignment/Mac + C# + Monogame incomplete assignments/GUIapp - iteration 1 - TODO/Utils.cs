@@ -86,6 +86,7 @@ namespace GUIapp
     }
     public void DrawButton(Button element)
     {
+      sprite_batch.Draw(white_pixel, new Rectangle((int)element.top_left_corner.X, (int)element.top_left_corner.Y, (int)element.width, (int)element.height), element.color);
       //MISSING CODE HERE
     }
     public void DrawLabel(Label element)
